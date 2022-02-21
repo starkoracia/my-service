@@ -1,0 +1,102 @@
+import React, {useEffect, useState} from 'react';
+import Select from "react-select";
+import {Button} from "react-bootstrap";
+import AddClientWindow from "./AddClientWindow";
+import axios from "axios";
+
+function ClientSelect({show, clientSelectValue, setClientSelectValue, showMessage}) {
+
+    const [showAddClient, setShowAddClient] = useState(false);
+    const [clientOptions, setClientOptions] = useState([{label: '...', value: null}]);
+
+    useEffect(() => {
+        if (show) {
+            initData();
+        }
+    }, [show])
+
+    function initData() {
+        getClients();
+    }
+
+    function closeAddWindow() {
+        setShowAddClient(false);
+    }
+
+    function onClientCreated() {
+        getLastCreatedClient();
+    }
+
+    function getLastCreatedClient() {
+        axios.get('http://localhost:8080/clients/last')
+            .then((response) => {
+                const client = response.data;
+                const label = `${client.name}  ${client.mobile}`
+                const clientOption = {label: label, value: client};
+                clientOptions.push(clientOption)
+                setClientSelectValue(clientOption);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+
+    function onClickAddClient() {
+        setShowAddClient(true);
+    }
+
+    function createAndSetClientOptions(clients) {
+        const options = convertClientsToOptions(clients);
+        setClientOptions(options);
+    }
+
+    function getClients() {
+        axios.get('http://localhost:8080/clients')
+            .then((response) => {
+                createAndSetClientOptions(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+
+    function convertClientsToOptions(clients) {
+        const options = [];
+        clients.forEach((c) => {
+            const label = `${c.name}  ${c.mobile}`
+            options.push({
+                label: label,
+                value: c
+            })
+        });
+        return options;
+    }
+
+    return (
+        <>
+            <div className={'select-div'}>
+                <Select
+                    className={'select'}
+                    options={clientOptions}
+                    value={clientSelectValue}
+                    onChange={setClientSelectValue}
+                    isClearable={true}
+                />
+                <Button className={'select-button'}
+                        variant={"info"}
+                        onClick={onClickAddClient}>
+                    +
+                </Button>
+            </div>
+            <AddClientWindow
+                show={showAddClient}
+                closeAddWindow={closeAddWindow}
+                onClientCreated={onClientCreated}
+                showMessage={showMessage}
+            />
+        </>
+    );
+}
+
+
+export default ClientSelect;
