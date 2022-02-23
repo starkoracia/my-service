@@ -4,6 +4,8 @@ import ClientTable from "./ClientTable";
 import ShowMessage from "./ShowMessage";
 import Navbar from "./Navbar";
 import PaymentTable from "./PaymentTable";
+import ProductTable from "./ProductTable";
+import WarehouseWindow from "./WarehouseWindow";
 
 
 export default class Root extends Component {
@@ -44,6 +46,7 @@ export default class Root extends Component {
                     <Route exact path="/" element={<Navigate replace to={"/clients"}/>}/>
                     <Route path="/clients/*" element={<ClientTable showMessage={showMessage}/>}/>
                     <Route path="/payments/*" element={<PaymentTable showMessage={showMessage}/>}/>
+                    <Route path="/warehouse/*" element={<WarehouseWindow showMessage={showMessage}/>}/>
                 </Routes>
                 {/*<Scrollbars style={{width: "100%", height: "100%"}}>*/}
 

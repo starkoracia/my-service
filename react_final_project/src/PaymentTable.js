@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
 import axios from "axios";
-import {useNavigate} from 'react-router-dom';
 import {Card, Container} from "react-bootstrap";
 import EditClientWindow from "./EditClientWindow";
 import AddPaymentWindow from "./AddPaymentWindow";
@@ -17,7 +16,6 @@ function PaymentTable({showMessage}) {
     const [sort, setSort] = useState({sortField: 'id', isAsc: true});
     const [editingPayment, setEditingPayment] = useState({
         id: 0,
-
     });
     const [editingClient, setEditingClient] = useState({
         id: 0,
@@ -210,7 +208,7 @@ function PaymentTable({showMessage}) {
         return (
             <>
                 <h4 style={{whiteSpace: 'pre'}}>{tableName}</h4>
-                <div className={'payment-plus-minus-buttons-div'}>
+                <div className={'plus-minus-buttons-div'}>
                     <button className={'add-button'}
                             onClick={() => {
                                 setIsIncomePayment(true);
@@ -256,26 +254,24 @@ function PaymentTable({showMessage}) {
     const createRowColumns = (payment) => {
         let rowColumns = [];
         const date = new Date(Date.parse(payment.dateTime));
-        // const supplierSvg = client.isSupplier &&
-        //     <img src={'/images/supplier.svg'} className={'supplier-svg'}/>
 
         let idColumn = <td key={'id'}> {payment.id}</td>;
         rowColumns.push(idColumn);
         let dateTimeColumn = <td key={'dateTime'}>
-            <div className={'payment-created-div'}>
+            <div className={'two-line-div'}>
                 <span>{payment.cashier.name}</span>
                 <span>{`${date.toLocaleDateString()} ${date.toLocaleTimeString()}`}</span>
             </div>
         </td>;
         rowColumns.push(dateTimeColumn);
         let commentColumn = <td key={'comment'}>
-            <div className={'payment-created-div'}>
+            <div className={'two-line-div'}>
                 <span>{payment.paymentItem.name}</span>
                 <span>{payment.comment}</span>
             </div>
         </td>;
         rowColumns.push(commentColumn);
-        let clientColumn = <td key={'client'}></td>;
+        let clientColumn = <td key={'client'}/>;
         if(payment.client) {
             const client = payment.client;
             const supplierSvg = client.isSupplier &&

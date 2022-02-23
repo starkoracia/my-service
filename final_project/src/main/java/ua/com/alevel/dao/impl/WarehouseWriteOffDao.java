@@ -16,6 +16,10 @@ public class WarehouseWriteOffDao  implements DaoWarehouseWriteOff {
 
     EntityManager entityManager;
 
+    public WarehouseWriteOffDao(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
     @Override
     public Boolean create(WarehouseWriteOff writeOff) {
         entityManager.persist(writeOff);

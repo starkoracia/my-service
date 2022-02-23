@@ -33,7 +33,7 @@ public class WarehouseWriteOff extends WarehouseOperation {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
@@ -41,5 +41,12 @@ public class WarehouseWriteOff extends WarehouseOperation {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar dateTime;
 
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "order_id")
+    private Order order;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
 }

@@ -37,6 +37,9 @@ public class ProductMaterial extends BaseEntity {
     @Column(name = "is_warranty")
     private Boolean isWarranty;
 
+    @Column(name = "warranty_days")
+    private Integer warrantyDays;
+
     @Column(name = "zero_cost")
     private BigDecimal zeroCost;
 

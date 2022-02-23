@@ -17,9 +17,33 @@ td a:hover {
 }
 
 .main-board-div {
-    margin-left: 150px;
+    position: fixed;
+    right: 0;
+    left: 150px;
+    height: 100vh;
     display: flex;
-    width: 100vw;
+    flex-direction: column;
+}
+
+.nav-tabs .nav-link {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    background: #fff;
+    border-bottom-color: rgba(0, 0, 0, .125);
+}
+
+.nav-tabs .nav-link.active {
+    background: rgb(247 247 247);
+    border-color: #dee2e6 #dee2e6 rgb(247 247 247);
+}
+
+.warehouse-tabs {
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-top: 0;
+}
+
+.tab-pane.active .table-wrap {
+    min-width: 730px;
 }
 
 .nav-link {
@@ -33,14 +57,13 @@ td a:hover {
     vertical-align: middle;
 }
 
-.nav-link.active {
+.nav-link.nav-bar.active {
     background: linear-gradient(265deg, #707070, #ff000000);
 }
 
 .navbar-svg-img {
     width: 17px;
 }
-
 
 .navbar-bs {
     position: fixed;
@@ -67,6 +90,11 @@ td a:hover {
     margin: 0;
     max-width: 100vw;
     padding: 0 0;
+    min-width: 1014px;
+}
+
+.table-wrap.card-body {
+    margin-top: 15px;
 }
 
 .pagination {
@@ -121,6 +149,38 @@ th.table-header-column {
     display: inline-block;
 }
 
+.tab-card {
+    height: 100%;
+}
+
+.tab-pane .table-card {
+    height: 100%;
+}
+
+.tab-pane .table-wrap {
+    height: 100%;
+}
+
+.tab-content .table-card-body {
+    height: 100%;
+}
+
+.tab-content .tab-pane {
+    height: 100%;
+}
+
+.table-wrap.card-body .tab-content {
+    position: absolute;
+    bottom: 0;
+    top: 50px;
+    right: 0;
+    left: 0;
+}
+
+.tab-card .table-wrap {
+    position: relative;
+}
+
 .sort-icon {
     display: inline-block;
     cursor: pointer;
@@ -168,7 +228,7 @@ th.table-header-column {
 }
 
 .input-text.input-cash {
-   width: 100px;
+    width: 100px;
 }
 
 .table-card-body {
@@ -178,6 +238,7 @@ th.table-header-column {
 .table-card {
     height: 100vh;
     border-radius: 0;
+    border-top: 0;
 }
 
 .search-container {
@@ -215,6 +276,7 @@ th.table-header-column {
     border-radius: 4px;
     box-sizing: border-box;
     cursor: pointer;
+    width: fit-content;
 }
 
 .add-button:hover {
@@ -235,7 +297,7 @@ th.table-header-column {
     background: rgba(213, 57, 53, 0.85);
 }
 
-.payment-plus-minus-buttons-div {
+.plus-minus-buttons-div {
     display: flex;
 }
 
@@ -256,7 +318,7 @@ th.table-header-column {
     margin-left: 25px;
 }
 
-.payment-created-div {
+.two-line-div {
     display: flex;
     flex-direction: column;
 }

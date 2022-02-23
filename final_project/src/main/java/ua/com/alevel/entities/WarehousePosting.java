@@ -21,7 +21,7 @@ public class WarehousePosting extends WarehouseOperation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "supplier_id", nullable = false)
     private Client supplier;
 
@@ -44,7 +44,7 @@ public class WarehousePosting extends WarehouseOperation {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar dateTime;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "payment_id")
     private Payment payment;
 

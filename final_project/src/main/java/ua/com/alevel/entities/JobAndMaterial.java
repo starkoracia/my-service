@@ -23,6 +23,9 @@ public class JobAndMaterial extends BaseEntity {
     @Column(name = "price")
     private String price;
 
+    @Column(name = "is_warranty")
+    private Boolean isWarranty;
+
     @Column(name = "warranty_days")
     private Integer warrantyDays;
 

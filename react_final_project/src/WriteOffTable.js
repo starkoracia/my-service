@@ -4,7 +4,7 @@ import axios from "axios";
 import {Card, Container, Tab, Tabs} from "react-bootstrap";
 
 
-function ProductTable({showMessage}) {
+function WriteOffTable({showMessage}) {
     const [numberOfRows, setNumberOfRows] = useState(10);
     const [pageNumber, setPageNumber] = useState(1);
     const [amountOfElements, setAmountOfElements] = useState(0);
@@ -12,7 +12,7 @@ function ProductTable({showMessage}) {
     const [searchField, setSearchField] = useState('');
     const [searchMatches, setSearchMatches] = useState(0);
     const [sort, setSort] = useState({sortField: 'id', isAsc: true});
-    const [editingProduct, setEditingProduct] = useState({
+    const [editingWriteOff, setEditingWriteOff] = useState({
         id: 0,
     });
     const [editingClient, setEditingClient] = useState({
@@ -24,16 +24,16 @@ function ProductTable({showMessage}) {
         recommendation: '',
         annotation: ''
     });
-    const [products, setProducts] = useState([]);
-    const [showAddProduct, setShowAddProduct] = useState(false);
-    const [showEditProduct, setShowEditProduct] = useState(false);
+    const [writeOffs, setWriteOffs] = useState([]);
+    const [showAddWriteOff, setShowAddWriteOff] = useState(false);
+    const [showEditWriteOff, setShowEditWriteOff] = useState(false);
     const [showEditClient, setShowEditClient] = useState(false);
-    const [isIncomeProduct, setIsIncomeProduct] = useState(false);
+    const [isIncomeWriteOff, setIsIncomeWriteOff] = useState(false);
     const firstTimeRender = useRef(true);
 
     useEffect(() => {
         countAndSetTheTotalOfPages();
-    }, [amountOfElements, products])
+    }, [amountOfElements, writeOffs])
 
     useEffect(() => {
         getElements();
@@ -53,7 +53,7 @@ function ProductTable({showMessage}) {
     }, [searchField])
 
     function getElements() {
-        axios.get('http://localhost:8080/products')
+        axios.get('http://localhost:8080/write_offs')
             //     numberOfElementsOnPage: numberOfRows,
             //     pageNumber: pageNumber,
             //     searchString: searchField,
@@ -62,7 +62,7 @@ function ProductTable({showMessage}) {
             // })
             .then((response) => {
                 console.log(response.data);
-                setProducts(response.data);
+                setWriteOffs(response.data);
                 // setAmountOfElements(response.data.amountOfElements);
             })
             .catch(function (error) {
@@ -70,8 +70,8 @@ function ProductTable({showMessage}) {
             })
     }
 
-    function editProduct(client) {
-        axios.post('http://localhost:8080/products/edit', client)
+    function editWriteOff(client) {
+        axios.post('http://localhost:8080/writeOffs/edit', client)
             .then((response) => {
                 if (response.data === true) {
                     showMessage('Успешно сохранен', 'success')
@@ -87,7 +87,7 @@ function ProductTable({showMessage}) {
     }
 
     const getNumberOfSearchMatches = () => {
-        axios.post('http://localhost:8080/products/matches', {
+        axios.post('http://localhost:8080/writeOffs/matches', {
             searchString: searchField
         })
             .then((response) => {
@@ -157,29 +157,29 @@ function ProductTable({showMessage}) {
     }
 
     const onDblClick = (client) => {
-        setEditingProduct(client);
-        setShowEditProduct(true);
+        setEditingWriteOff(client);
+        setShowEditWriteOff(true);
     }
 
-    function onProductClick(e, client) {
+    function onWriteOffClick(e, client) {
         onDblClick(client);
         e.preventDefault();
     }
 
     function closeAddWindow() {
-        setShowAddProduct(false);
+        setShowAddWriteOff(false);
     }
 
     function closeEditWindow() {
-        setShowEditProduct(false);
+        setShowEditWriteOff(false);
     }
 
-    function onProductCreated() {
+    function onWriteOffCreated() {
         getElements();
     }
 
     function onSubmitEdit(client) {
-        editProduct(client);
+        editWriteOff(client);
         closeEditWindow();
     }
 
@@ -190,22 +190,22 @@ function ProductTable({showMessage}) {
     }
 
     function createTableCardHeader() {
-        const tableName = 'Продукты';
+        const tableName = 'Списания';
         return (
             <>
                 <h4 style={{whiteSpace: 'pre'}}>{tableName}</h4>
                 {/*<div className={'plus-minus-buttons-div'}>*/}
                 {/*    <button className={'add-button'}*/}
                 {/*            onClick={() => {*/}
-                {/*                setIsIncomeProduct(true);*/}
-                {/*                setShowAddProduct(true);*/}
+                {/*                setIsIncomeWriteOff(true);*/}
+                {/*                setShowAddWriteOff(true);*/}
                 {/*            }}>*/}
                 {/*        <img src={'/images/plus.svg'} className={'plus-svg'}/> Оприходование*/}
                 {/*    </button>*/}
                 {/*    <button className={'minus-button'}*/}
                 {/*            onClick={() => {*/}
-                {/*                setIsIncomeProduct(false);*/}
-                {/*                setShowAddProduct(true);*/}
+                {/*                setIsIncomeWriteOff(false);*/}
+                {/*                setShowAddWriteOff(true);*/}
                 {/*            }}>*/}
                 {/*        <img src={'/images/minus.svg'} className={'plus-svg'}/> Списание*/}
                 {/*    </button>*/}
@@ -217,12 +217,10 @@ function ProductTable({showMessage}) {
     const getHeaderFieldNamesMap = () => {
         const headerFieldArray = [
             {headerName: 'Id', fieldName: 'id'},
-            {headerName: 'Наименование', fieldName: 'name'},
+            {headerName: 'Время', fieldName: 'dateTime'},
             {headerName: 'Описание', fieldName: 'description'},
-            {headerName: 'Код', fieldName: 'code'},
-            {headerName: 'Цена', fieldName: 'tradeCost'},
-            {headerName: 'Гарантия', fieldName: 'warrantyDays'},
-            {headerName: 'Остаток', fieldName: 'numberOf'},
+            {headerName: 'Заказ', fieldName: 'order'},
+            {headerName: 'Цена', fieldName: 'payment'},
         ]
         const headerFieldMap = new Map();
         headerFieldArray.forEach(headerField => {
@@ -231,36 +229,25 @@ function ProductTable({showMessage}) {
         return headerFieldMap;
     }
 
-    const createRowColumns = (product) => {
+    const createRowColumns = (writeOff) => {
         let rowColumns = [];
-        // const date = new Date(Date.parse(product.dateTime));
-        // const supplierSvg = client.isSupplier &&
-        //     <img src={'/images/supplier.svg'} className={'supplier-svg'}/>
+        const date = new Date(Date.parse(writeOff.dateTime));
 
-        let idColumn = <td key={'id'}> {product.id}</td>;
+        let idColumn = <td key={'id'}> {writeOff.id}</td>;
         rowColumns.push(idColumn);
-        let nameColumn = <td key={'name'} style={{padding: '1px 8px'}}>
+        let dateTimeColumn = <td key={'dateTime'}>
             <div className={'two-line-div'}>
-                <span>{product.productCategory.name}</span>
-                <span style={{fontWeight: 500, fontSize: 'small'}}>{`${product.name}`}</span>
+                <span>{writeOff.employee.name}</span>
+                <span>{`${date.toLocaleDateString()} ${date.toLocaleTimeString()}`}</span>
             </div>
         </td>;
-        rowColumns.push(nameColumn);
-        let descriptionColumn = <td key={'description'}>{product.description}</td>;
+        rowColumns.push(dateTimeColumn);
+        let descriptionColumn = <td key={'description'}>{writeOff.description}</td>;
         rowColumns.push(descriptionColumn);
-        let codeColumn = <td key={'code'}>
-            <div className={'two-line-div'}>
-                <span>{product.code}</span>
-                <span>{product.vendorCode}</span>
-            </div>
-        </td>;
-        rowColumns.push(codeColumn);
-        let tradeCostColumn = <td key={'tradeCost'}> {product.tradeCost}</td>;
-        rowColumns.push(tradeCostColumn);
-        let warrantyDaysColumn = <td key={'warrantyDays'}> {product.warrantyDays}</td>;
-        rowColumns.push(warrantyDaysColumn);
-        let numberOfColumn = <td key={'numberOf'}> {product.numberOf}</td>;
-        rowColumns.push(numberOfColumn);
+        let orderColumn = <td key={'order'}>{`Заказ #${writeOff.order.id}`}</td>;
+        rowColumns.push(orderColumn);
+        let paymentColumn = <td key={'payment'}> {writeOff.payment && writeOff.payment.amount}</td>;
+        rowColumns.push(paymentColumn);
 
         return rowColumns;
     }
@@ -283,46 +270,46 @@ function ProductTable({showMessage}) {
                 currentPage={pageNumber}
                 numberOfRows={numberOfRows}
                 tableCardHeader={createTableCardHeader()}
-                elements={products}
+                elements={writeOffs}
                 createRowColumns={createRowColumns}/>
             {/*<Table*/}
-        {/*    onChangeSearchField={onChangeSearchField}*/}
-        {/*    onChangeNumberOfRowsHandler={onChangeNumberOfRowsHandler}*/}
-        {/*    paginationOnClick={paginationOnClick}*/}
-        {/*    onSearchSubmit={onSearchSubmit}*/}
-        {/*    onClickSortIcon={onClickSortIcon}*/}
-        {/*    onClickEdit={onDblClick}*/}
-        {/*    headerFieldNamesMap={getHeaderFieldNamesMap()}*/}
-        {/*    isAsc={sort.isAsc}*/}
-        {/*    sortField={sort.sortField}*/}
-        {/*    searchMatches={searchMatches}*/}
-        {/*    amountOfElements={amountOfElements}*/}
-        {/*    totalPages={totalOfPages}*/}
-        {/*    currentPage={pageNumber}*/}
-        {/*    numberOfRows={numberOfRows}*/}
-        {/*    tableCardHeader={createTableCardHeader()}*/}
-        {/*    elements={products}*/}
-        {/*    createRowColumns={createRowColumns}/>*/}
-        {/*<EditClientWindow*/}
-        {/*    show={showEditClient}*/}
-        {/*    closeEditWindow={() => setShowEditClient(false)}*/}
-        {/*    onClientEdited={() => {getElements()}}*/}
-        {/*    editingClient={editingClient}*/}
-        {/*    showMessage={showMessage}/>*/}
-        {/*<AddProductWindow*/}
-        {/*    show={showAddProduct}*/}
-        {/*    closeWindow={() => setShowAddProduct(false)}*/}
-        {/*    onProductCreated={onProductCreated}*/}
-        {/*    isIncomeProduct={isIncomeProduct}*/}
-        {/*    showMessage={showMessage}/>*/}
-        {/*<EditProductWindow*/}
-        {/*    show={showEditProduct}*/}
-        {/*    onHide={closeEditWindow}*/}
-        {/*    closeEditWindow={closeEditWindow}*/}
-        {/*    onSubmitEdit={onSubmitEdit}*/}
-        {/*    editingProduct={editingProduct}/>*/}
+            {/*    onChangeSearchField={onChangeSearchField}*/}
+            {/*    onChangeNumberOfRowsHandler={onChangeNumberOfRowsHandler}*/}
+            {/*    paginationOnClick={paginationOnClick}*/}
+            {/*    onSearchSubmit={onSearchSubmit}*/}
+            {/*    onClickSortIcon={onClickSortIcon}*/}
+            {/*    onClickEdit={onDblClick}*/}
+            {/*    headerFieldNamesMap={getHeaderFieldNamesMap()}*/}
+            {/*    isAsc={sort.isAsc}*/}
+            {/*    sortField={sort.sortField}*/}
+            {/*    searchMatches={searchMatches}*/}
+            {/*    amountOfElements={amountOfElements}*/}
+            {/*    totalPages={totalOfPages}*/}
+            {/*    currentPage={pageNumber}*/}
+            {/*    numberOfRows={numberOfRows}*/}
+            {/*    tableCardHeader={createTableCardHeader()}*/}
+            {/*    elements={writeOffs}*/}
+            {/*    createRowColumns={createRowColumns}/>*/}
+            {/*<EditClientWindow*/}
+            {/*    show={showEditClient}*/}
+            {/*    closeEditWindow={() => setShowEditClient(false)}*/}
+            {/*    onClientEdited={() => {getElements()}}*/}
+            {/*    editingClient={editingClient}*/}
+            {/*    showMessage={showMessage}/>*/}
+            {/*<AddWriteOffWindow*/}
+            {/*    show={showAddWriteOff}*/}
+            {/*    closeWindow={() => setShowAddWriteOff(false)}*/}
+            {/*    onWriteOffCreated={onWriteOffCreated}*/}
+            {/*    isIncomeWriteOff={isIncomeWriteOff}*/}
+            {/*    showMessage={showMessage}/>*/}
+            {/*<EditWriteOffWindow*/}
+            {/*    show={showEditWriteOff}*/}
+            {/*    onHide={closeEditWindow}*/}
+            {/*    closeEditWindow={closeEditWindow}*/}
+            {/*    onSubmitEdit={onSubmitEdit}*/}
+            {/*    editingWriteOff={editingWriteOff}/>*/}
         </>
     );
 }
 
-export default ProductTable;
+export default WriteOffTable;

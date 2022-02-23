@@ -59,6 +59,7 @@ CREATE TABLE product_materials
     code                VARCHAR(255)          NULL,
     vendor_code         VARCHAR(255)          NULL,
     is_warranty         BIT(1)                NULL,
+    warranty_days       INT                   NULL,
     zero_cost           DECIMAL(20)               NULL,
     repair_cost         DECIMAL(20)               NULL,
     trade_cost          DECIMAL(20)               NULL,
@@ -86,6 +87,7 @@ CREATE TABLE job_and_materials
     id                  BIGINT AUTO_INCREMENT NOT NULL,
     name                VARCHAR(255)          NULL,
     price               VARCHAR(255)          NULL,
+    is_warranty         BIT(1)                NULL,
     warranty_days       INT                   NULL,
     zero_cost           VARCHAR(255)          NULL,
     discount            VARCHAR(255)          NULL,
@@ -194,11 +196,19 @@ CREATE TABLE warehouse_write_off
     `description` VARCHAR(255)          NULL,
     employee_id   BIGINT                NULL,
     date_time     datetime              NULL,
+    order_id      BIGINT                NULL,
+    payment_id    BIGINT                NULL,
     CONSTRAINT pk_warehouse_write_off PRIMARY KEY (id)
 );
 
 ALTER TABLE warehouse_write_off
     ADD CONSTRAINT FK_WAREHOUSE_WRITE_OFF_ON_EMPLOYEE FOREIGN KEY (employee_id) REFERENCES employees (id);
+
+ALTER TABLE warehouse_write_off
+    ADD CONSTRAINT FK_WAREHOUSE_WRITE_OFF_ON_ORDER FOREIGN KEY (order_id) REFERENCES orders (id);
+
+ALTER TABLE warehouse_write_off
+    ADD CONSTRAINT FK_WAREHOUSE_WRITE_OFF_ON_PAYMENT FOREIGN KEY (payment_id) REFERENCES payments (id);
 
 CREATE TABLE IF NOT EXISTS orders_job_and_materials
 (
