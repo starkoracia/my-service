@@ -71,4 +71,12 @@ public class ProductCategoryDao implements DaoProductCategory {
                 .getSingleResult();
     }
 
+    public ProductCategory getLastCreatedCategory() {
+        ProductCategory category = (ProductCategory) entityManager.
+                createQuery("select cg from ProductCategory cg " +
+                        "where cg.id=(select max(cg.id) from ProductCategory cg)")
+                .getSingleResult();
+        return category;
+    }
+
 }

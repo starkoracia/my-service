@@ -2,11 +2,11 @@ import React, {useEffect, useState} from 'react';
 import Select from "react-select";
 import {Button} from "react-bootstrap";
 import axios from "axios";
-import AddPaymentItemWindow from "./AddPaymentItemWindow";
+import AddProductCategoryWindow from "./AddProductCategoryWindow";
 
-function PaymentItemSelect({show, itemSelectValue, setItemSelectValue, showMessage, isIncomePayment}) {
+function ProductCategorySelect({show, itemSelectValue, setItemSelectValue, showMessage}) {
 
-    const [showAddItem, setShowAddItem] = useState(false);
+    const [showAddCategory, setShowAddCategory] = useState(false);
     const [itemOptions, setItemOptions] = useState([{label: '...', value: null}]);
 
     useEffect(() => {
@@ -20,31 +20,11 @@ function PaymentItemSelect({show, itemSelectValue, setItemSelectValue, showMessa
     }
 
     function closeAddWindow() {
-        setShowAddItem(false);
+        setShowAddCategory(false);
     }
 
-    function onItemCreated() {
-        getLastCreatedClient();
-    }
-
-    function getLastCreatedClient() {
-        axios.get('http://localhost:8080/payments/items/last')
-            .then((response) => {
-                const item = response.data;
-                const label = `${item.name}`
-                const itemOption = {label: label, value: item};
-                if(isIncomePayment === item.income) {
-                    itemOptions.push(itemOption);
-                    setItemSelectValue(itemOption);
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-    }
-
-    function onClickAddItem() {
-        setShowAddItem(true);
+    function onClickAddCategory() {
+        setShowAddCategory(true);
     }
 
     function createAndSetItemOptions(items) {
@@ -54,7 +34,7 @@ function PaymentItemSelect({show, itemSelectValue, setItemSelectValue, showMessa
     }
 
     function getItems() {
-        axios.get('http://localhost:8080/payments/items')
+        axios.get('http://localhost:8080/products/categories')
             .then((response) => {
                 createAndSetItemOptions(response.data);
             })
@@ -66,12 +46,29 @@ function PaymentItemSelect({show, itemSelectValue, setItemSelectValue, showMessa
     function convertItemsToOptions(items) {
         const options = [];
         items
-            .filter((i) => i.income === isIncomePayment)
             .forEach((i) => {
                 const label = `${i.name}`
                 options.push({label: label, value: i})
             });
         return options;
+    }
+
+    function onItemCreated() {
+        getLastCreatedCategory();
+    }
+
+    function getLastCreatedCategory() {
+        axios.get('http://localhost:8080/products/categories/last')
+            .then((response) => {
+                const item = response.data;
+                const label = `${item.name}`
+                const itemOption = {label: label, value: item};
+                itemOptions.push(itemOption);
+                setItemSelectValue(itemOption);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
     }
 
     return (
@@ -85,18 +82,18 @@ function PaymentItemSelect({show, itemSelectValue, setItemSelectValue, showMessa
                 />
                 <Button className={'select-button'}
                         variant={"info"}
-                        onClick={onClickAddItem}>
+                        onClick={onClickAddCategory}>
                     +
                 </Button>
             </div>
-            <AddPaymentItemWindow
-                show={showAddItem}
+            <AddProductCategoryWindow
+                show={showAddCategory}
                 closeAddWindow={closeAddWindow}
-                onItemCreated={onItemCreated}
                 showMessage={showMessage}
+                onItemCreated={onItemCreated}
             />
         </>
     );
 }
 
-export default PaymentItemSelect;
+export default ProductCategorySelect;

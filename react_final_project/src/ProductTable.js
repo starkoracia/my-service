@@ -1,7 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
 import axios from "axios";
-import {Card, Container, Tab, Tabs} from "react-bootstrap";
+import {Button, Card, Container, Tab, Tabs} from "react-bootstrap";
+import AddProductWindow from "./AddProductWindow";
 
 
 function ProductTable({showMessage}) {
@@ -28,7 +29,6 @@ function ProductTable({showMessage}) {
     const [showAddProduct, setShowAddProduct] = useState(false);
     const [showEditProduct, setShowEditProduct] = useState(false);
     const [showEditClient, setShowEditClient] = useState(false);
-    const [isIncomeProduct, setIsIncomeProduct] = useState(false);
     const firstTimeRender = useRef(true);
 
     useEffect(() => {
@@ -189,27 +189,22 @@ function ProductTable({showMessage}) {
         e.preventDefault();
     }
 
+    function onClickAddProduct() {
+        setShowAddProduct(true);
+    }
+
     function createTableCardHeader() {
-        const tableName = 'Продукты';
+        const tableName = 'Товары';
         return (
             <>
                 <h4 style={{whiteSpace: 'pre'}}>{tableName}</h4>
-                {/*<div className={'plus-minus-buttons-div'}>*/}
-                {/*    <button className={'add-button'}*/}
-                {/*            onClick={() => {*/}
-                {/*                setIsIncomeProduct(true);*/}
-                {/*                setShowAddProduct(true);*/}
-                {/*            }}>*/}
-                {/*        <img src={'/images/plus.svg'} className={'plus-svg'}/> Оприходование*/}
-                {/*    </button>*/}
-                {/*    <button className={'minus-button'}*/}
-                {/*            onClick={() => {*/}
-                {/*                setIsIncomeProduct(false);*/}
-                {/*                setShowAddProduct(true);*/}
-                {/*            }}>*/}
-                {/*        <img src={'/images/minus.svg'} className={'plus-svg'}/> Списание*/}
-                {/*    </button>*/}
-                {/*</div>*/}
+                <div className={'plus-minus-buttons-div'}>
+                    <Button variant={'info'} className={'select-button'}
+                            onClick={onClickAddProduct}>
+                        <img src={'/images/plus.svg'} className={'plus-svg'}/>
+                        Товар
+                    </Button>
+                </div>
             </>
         )
     }
@@ -285,35 +280,16 @@ function ProductTable({showMessage}) {
                 tableCardHeader={createTableCardHeader()}
                 elements={products}
                 createRowColumns={createRowColumns}/>
-            {/*<Table*/}
-        {/*    onChangeSearchField={onChangeSearchField}*/}
-        {/*    onChangeNumberOfRowsHandler={onChangeNumberOfRowsHandler}*/}
-        {/*    paginationOnClick={paginationOnClick}*/}
-        {/*    onSearchSubmit={onSearchSubmit}*/}
-        {/*    onClickSortIcon={onClickSortIcon}*/}
-        {/*    onClickEdit={onDblClick}*/}
-        {/*    headerFieldNamesMap={getHeaderFieldNamesMap()}*/}
-        {/*    isAsc={sort.isAsc}*/}
-        {/*    sortField={sort.sortField}*/}
-        {/*    searchMatches={searchMatches}*/}
-        {/*    amountOfElements={amountOfElements}*/}
-        {/*    totalPages={totalOfPages}*/}
-        {/*    currentPage={pageNumber}*/}
-        {/*    numberOfRows={numberOfRows}*/}
-        {/*    tableCardHeader={createTableCardHeader()}*/}
-        {/*    elements={products}*/}
-        {/*    createRowColumns={createRowColumns}/>*/}
+            <AddProductWindow
+                show={showAddProduct}
+                closeWindow={() => setShowAddProduct(false)}
+                onProductCreated={onProductCreated}
+                showMessage={showMessage}/>
         {/*<EditClientWindow*/}
         {/*    show={showEditClient}*/}
         {/*    closeEditWindow={() => setShowEditClient(false)}*/}
         {/*    onClientEdited={() => {getElements()}}*/}
         {/*    editingClient={editingClient}*/}
-        {/*    showMessage={showMessage}/>*/}
-        {/*<AddProductWindow*/}
-        {/*    show={showAddProduct}*/}
-        {/*    closeWindow={() => setShowAddProduct(false)}*/}
-        {/*    onProductCreated={onProductCreated}*/}
-        {/*    isIncomeProduct={isIncomeProduct}*/}
         {/*    showMessage={showMessage}/>*/}
         {/*<EditProductWindow*/}
         {/*    show={showEditProduct}*/}

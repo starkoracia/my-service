@@ -22,6 +22,8 @@ public class ProductMaterialFacade implements FacadeProductMaterial {
 
     @Override
     public Boolean create(ProductMaterialDto dto) {
+        dto.setNumberOf(0);
+        dto.setInStock(false);
         return productService.create(dto.toProductMaterial());
     }
 
