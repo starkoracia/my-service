@@ -10,8 +10,12 @@ function ProductCategorySelect({show, itemSelectValue, setItemSelectValue, showM
     const [itemOptions, setItemOptions] = useState([{label: '...', value: null}]);
 
     useEffect(() => {
+        initData();
+    }, [])
+
+    useEffect(() => {
         if (show) {
-            initData();
+
         }
     }, [show])
 
@@ -29,7 +33,9 @@ function ProductCategorySelect({show, itemSelectValue, setItemSelectValue, showM
 
     function createAndSetItemOptions(items) {
         const options = convertItemsToOptions(items);
-        setItemSelectValue(options[0])
+        if(show) {
+            setItemSelectValue(options[0]);
+        }
         setItemOptions(options);
     }
 

@@ -90,7 +90,7 @@ export default function AddProductCategoryWindow({show, closeAddWindow, showMess
                 <Card className={"add-card"}>
                     <Scrollbars style={{width: "100%", height: "100%"}}>
                         <Card.Body className={"add-card-body"}>
-                            <Form className={"add-form"}>
+                            <Form className={"add-form"} onSubmit={(event) => event.preventDefault()}>
                                 <Form.Group className={"add-form-group"}>
                                     <Form.Label className={'form-group-label'}>Имя категории</Form.Label>
                                     <Form.Control type={"text"} className={'payment-input input-text'}

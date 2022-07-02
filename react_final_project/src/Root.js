@@ -4,7 +4,6 @@ import ClientTable from "./ClientTable";
 import ShowMessage from "./ShowMessage";
 import Navbar from "./Navbar";
 import PaymentTable from "./PaymentTable";
-import ProductTable from "./ProductTable";
 import WarehouseWindow from "./WarehouseWindow";
 
 
@@ -40,8 +39,8 @@ export default class Root extends Component {
                 <ShowMessage
                     show={alertIsShow}
                     variant={alertVariant}
-                    message={alertMessage}/>
-                <Navbar/>
+                    message={alertMessage} />
+                <Navbar />
                 <Routes>
                     <Route exact path="/" element={<Navigate replace to={"/clients"}/>}/>
                     <Route path="/clients/*" element={<ClientTable showMessage={showMessage}/>}/>

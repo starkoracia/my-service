@@ -3,6 +3,7 @@ import Table from "./Table";
 import axios from "axios";
 import {Button, Card, Container, Tab, Tabs} from "react-bootstrap";
 import AddProductWindow from "./AddProductWindow";
+import EditProductWindow from "./EditProductWindow";
 
 
 function ProductTable({showMessage}) {
@@ -13,22 +14,22 @@ function ProductTable({showMessage}) {
     const [searchField, setSearchField] = useState('');
     const [searchMatches, setSearchMatches] = useState(0);
     const [sort, setSort] = useState({sortField: 'id', isAsc: true});
-    const [editingProduct, setEditingProduct] = useState({
+    const [productToEdit, setProductToEdit] = useState({
         id: 0,
-    });
-    const [editingClient, setEditingClient] = useState({
-        id: 0,
+        productCategory: {label: 'Все товары', value: {id: 1, name: 'Все товары'}},
         name: '',
-        email: '',
-        mobile: '',
-        isSupplier: false,
-        recommendation: '',
-        annotation: ''
+        description: '',
+        code: '',
+        vendorCode: '',
+        isWarranty: false,
+        warrantyDays: '0',
+        zeroCost: '0',
+        repairCost: '0',
+        tradeCost: '0',
     });
     const [products, setProducts] = useState([]);
     const [showAddProduct, setShowAddProduct] = useState(false);
     const [showEditProduct, setShowEditProduct] = useState(false);
-    const [showEditClient, setShowEditClient] = useState(false);
     const firstTimeRender = useRef(true);
 
     useEffect(() => {
@@ -53,35 +54,19 @@ function ProductTable({showMessage}) {
     }, [searchField])
 
     function getElements() {
-        axios.get('http://localhost:8080/products')
-            //     numberOfElementsOnPage: numberOfRows,
-            //     pageNumber: pageNumber,
-            //     searchString: searchField,
-            //     isSortAsc: sort.isAsc,
-            //     sortBy: sort.sortField
-            // })
+        axios.post('http://localhost:8080/products', {
+            numberOfElementsOnPage: numberOfRows,
+            pageNumber: pageNumber,
+            searchString: searchField,
+            isSortAsc: sort.isAsc,
+            sortBy: sort.sortField
+        })
             .then((response) => {
                 console.log(response.data);
-                setProducts(response.data);
-                // setAmountOfElements(response.data.amountOfElements);
+                setProducts(response.data.dtoEntities);
+                setAmountOfElements(response.data.amountOfElements);
             })
             .catch(function (error) {
-                console.log(error);
-            })
-    }
-
-    function editProduct(client) {
-        axios.post('http://localhost:8080/products/edit', client)
-            .then((response) => {
-                if (response.data === true) {
-                    showMessage('Успешно сохранен', 'success')
-                    getElements();
-                } else {
-                    showMessage('Ошибка сохранения', 'danger')
-                }
-            })
-            .catch(function (error) {
-                showMessage('Ошибка сохранения', 'danger')
                 console.log(error);
             })
     }
@@ -156,14 +141,9 @@ function ProductTable({showMessage}) {
         setSort({sortField: sortName, isAsc: isAscNew});
     }
 
-    const onDblClick = (client) => {
-        setEditingProduct(client);
+    const onDblClick = (product) => {
+        setProductToEdit(product);
         setShowEditProduct(true);
-    }
-
-    function onProductClick(e, client) {
-        onDblClick(client);
-        e.preventDefault();
     }
 
     function closeAddWindow() {
@@ -178,15 +158,8 @@ function ProductTable({showMessage}) {
         getElements();
     }
 
-    function onSubmitEdit(client) {
-        editProduct(client);
-        closeEditWindow();
-    }
-
-    function onClientClick(e, client) {
-        setEditingClient(client);
-        setShowEditClient(true);
-        e.preventDefault();
+    function onSubmitProductEdit() {
+        getElements();
     }
 
     function onClickAddProduct() {
@@ -279,24 +252,24 @@ function ProductTable({showMessage}) {
                 numberOfRows={numberOfRows}
                 tableCardHeader={createTableCardHeader()}
                 elements={products}
-                createRowColumns={createRowColumns}/>
+                createRowColumns={createRowColumns} />
             <AddProductWindow
                 show={showAddProduct}
                 closeWindow={() => setShowAddProduct(false)}
                 onProductCreated={onProductCreated}
-                showMessage={showMessage}/>
-        {/*<EditClientWindow*/}
-        {/*    show={showEditClient}*/}
-        {/*    closeEditWindow={() => setShowEditClient(false)}*/}
-        {/*    onClientEdited={() => {getElements()}}*/}
-        {/*    editingClient={editingClient}*/}
-        {/*    showMessage={showMessage}/>*/}
-        {/*<EditProductWindow*/}
-        {/*    show={showEditProduct}*/}
-        {/*    onHide={closeEditWindow}*/}
-        {/*    closeEditWindow={closeEditWindow}*/}
-        {/*    onSubmitEdit={onSubmitEdit}*/}
-        {/*    editingProduct={editingProduct}/>*/}
+                showMessage={showMessage} />
+            <EditProductWindow
+                show={showEditProduct}
+                closeWindow={() => setShowEditProduct(false)}
+                onSubmitEdit={onSubmitProductEdit}
+                productToEdit={productToEdit}
+                showMessage={showMessage} />
+            {/*<EditClientWindow*/}
+            {/*    show={showEditClient}*/}
+            {/*    closeEditWindow={() => setShowEditClient(false)}*/}
+            {/*    onClientEdited={() => {getElements()}}*/}
+            {/*    editingClient={editingClient}*/}
+            {/*    showMessage={showMessage}/>*/}
         </>
     );
 }

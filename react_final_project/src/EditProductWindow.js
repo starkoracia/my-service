@@ -5,10 +5,10 @@ import axios from "axios";
 import $ from "jquery";
 import ProductCategorySelect from "./ProductCategorySelect";
 
-export default function AddProductWindow({
-                                             show, closeWindow, showMessage,
-                                             onProductCreated
-                                         }) {
+export default function EditProductWindow({
+                                              show, closeWindow, showMessage,
+                                              onSubmitEdit, productToEdit
+                                          }) {
     const [nameValue, setNameValue] = useState('');
     const [descriptionValue, setDescriptionValue] = useState('');
     const [codeValue, setCodeValue] = useState('');
@@ -22,7 +22,7 @@ export default function AddProductWindow({
     const [tradeMarginPercentageValue, setTradeMarginPercentageValue] = useState('100');
     const [isRepairCostCountInPercentageValue, setIsRepairCostCountInPercentageValue] = useState(true);
     const [isTradeCostCountInPercentageValue, setIsTradeCostCountInPercentageValue] = useState(true);
-    const [productCategorySelectValue, setProductCategorySelectValue] = useState({});
+    const [productCategorySelectValue, setProductCategorySelectValue] = useState({label: '', value: {}});
 
     useEffect(() => {
         if (show) {
@@ -34,14 +34,35 @@ export default function AddProductWindow({
         if (isRepairCostCountInPercentageValue) {
             setRepairCostValue(countingCostWithMargin(repairMarginPercentageValue));
         }
-        if(isTradeCostCountInPercentageValue) {
+        if (isTradeCostCountInPercentageValue) {
             setTradeCostValue(countingCostWithMargin(tradeMarginPercentageValue));
         }
     }, [zeroCostValue, repairMarginPercentageValue, tradeMarginPercentageValue,
         isRepairCostCountInPercentageValue, isTradeCostCountInPercentageValue])
 
     function initData() {
-        $('.input-text.focus').focus();
+        console.log(productToEdit);
+        setProductToForm(productToEdit);
+    }
+
+    function setProductToForm(product) {
+        setProductCategorySelectValue({
+            label: product.productCategory.name,
+            value: product.productCategory
+        });
+        setNameValue(product.name);
+        setDescriptionValue(product.description);
+        setCodeValue(product.code);
+        setVendorCodeValue(product.vendorCode);
+        setIsWarrantyValue(product.isWarranty);
+        setWarrantyDaysValue(product.warrantyDays);
+        setZeroCostValue(product.zeroCost);
+        setRepairCostValue(product.repairCost);
+        setTradeCostValue(product.tradeCost);
+        setRepairMarginPercentageValue('0');
+        setTradeMarginPercentageValue('0');
+        setIsRepairCostCountInPercentageValue(false);
+        setIsTradeCostCountInPercentageValue(false);
     }
 
     function countingCostWithMargin(percentage) {
@@ -50,8 +71,9 @@ export default function AddProductWindow({
         return costWithMargin.toString();
     }
 
-    function onSubmit() {
+    function onEditSubmit() {
         const product = {
+            id: productToEdit.id,
             productCategory: productCategorySelectValue.value,
             name: nameValue,
             description: descriptionValue,
@@ -64,39 +86,23 @@ export default function AddProductWindow({
             tradeCost: tradeCostValue,
         }
         console.log(product);
-        createProduct(product);
+        editProduct(product);
         closeWindow();
-        clearForm()
     }
 
-    function clearForm() {
-        setNameValue('');
-        setDescriptionValue('');
-        setCodeValue('');
-        setVendorCodeValue('');
-        setIsWarrantyValue(false);
-        setWarrantyDaysValue('0');
-        setZeroCostValue('0');
-        setRepairCostValue('0');
-        setTradeCostValue('0');
-        setRepairMarginPercentageValue('50');
-        setTradeMarginPercentageValue('100');
-        setIsRepairCostCountInPercentageValue(true);
-        setIsTradeCostCountInPercentageValue(true);
-    }
-
-    function createProduct(product) {
-        axios.post('http://localhost:8080/products/create', product)
+    function editProduct(product) {
+        axios.post('http://localhost:8080/products/edit', product)
             .then((response) => {
+                console.log(response.data);
                 if (response.data === true) {
-                    showMessage('Успешно создан', 'success')
-                    onProductCreated();
+                    showMessage('Успешно изменен', 'success')
+                    onSubmitEdit();
                 } else {
-                    showMessage('Ошибка создания', 'danger')
+                    showMessage('Ошибка изменения', 'danger')
                 }
             })
             .catch(function (error) {
-                showMessage('Ошибка создания', 'danger')
+                showMessage('Ошибка изменения', 'danger')
                 console.log(error);
             })
     }
@@ -110,7 +116,7 @@ export default function AddProductWindow({
     }
 
     function nameInvalidMessage() {
-        if(isNameNotValid()) {
+        if (isNameNotValid()) {
             return (
                 <Form.Text className={'invalid-message'}>
                     Имя не должно быть пустым!
@@ -121,7 +127,6 @@ export default function AddProductWindow({
 
     function onHide() {
         closeWindow();
-        clearForm();
     }
 
     return (
@@ -135,7 +140,7 @@ export default function AddProductWindow({
             >
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        {'Новый товар'}
+                        {'Данные товара'}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className={"add-modal-body"}>
@@ -162,8 +167,7 @@ export default function AddProductWindow({
                                             <ProductCategorySelect
                                                 itemSelectValue={productCategorySelectValue}
                                                 setItemSelectValue={setProductCategorySelectValue}
-                                                showMessage={showMessage}
-                                                show={show}/>
+                                                showMessage={showMessage} />
                                         </Form.Group>
                                         <hr/>
                                         <Form.Group className={"add-form-group"}>
@@ -232,10 +236,11 @@ export default function AddProductWindow({
                                                 </Form.Label>
                                                 <div className={'percentage-div'}>
                                                     <Form.Check type={'checkbox'} placeholder={"Поставщик"}>
-                                                        <Form.Check.Input className={'checkbox is-count-in-percentage-checkbox'}
-                                                                          checked={isRepairCostCountInPercentageValue}
-                                                                          onChange={(e) =>
-                                                                              setIsRepairCostCountInPercentageValue(e.target.checked)}/>
+                                                        <Form.Check.Input
+                                                            className={'checkbox is-count-in-percentage-checkbox'}
+                                                            checked={isRepairCostCountInPercentageValue}
+                                                            onChange={(e) =>
+                                                                setIsRepairCostCountInPercentageValue(e.target.checked)}/>
                                                     </Form.Check>
                                                     <Form.Label className={'form-group-label percentage-label'}>
                                                         %
@@ -263,10 +268,11 @@ export default function AddProductWindow({
                                                 </Form.Label>
                                                 <div className={'percentage-div'}>
                                                     <Form.Check type={'checkbox'} placeholder={"Поставщик"}>
-                                                        <Form.Check.Input className={'checkbox is-count-in-percentage-checkbox'}
-                                                                          checked={isTradeCostCountInPercentageValue}
-                                                                          onChange={(e) =>
-                                                                              setIsTradeCostCountInPercentageValue(e.target.checked)}/>
+                                                        <Form.Check.Input
+                                                            className={'checkbox is-count-in-percentage-checkbox'}
+                                                            checked={isTradeCostCountInPercentageValue}
+                                                            onChange={(e) =>
+                                                                setIsTradeCostCountInPercentageValue(e.target.checked)}/>
                                                     </Form.Check>
                                                     <Form.Label className={'form-group-label percentage-label'}>
                                                         %
@@ -297,8 +303,8 @@ export default function AddProductWindow({
                                 <div className={"add-cancel-buttons-div"}>
                                     <Button className={"add-form-button"} variant={"secondary"} type={"button"}
                                             disabled={isFormNotValid()}
-                                            onClick={onSubmit}>
-                                        Добавить
+                                            onClick={onEditSubmit}>
+                                        Изменить
                                     </Button>
                                     <Button className={"cancel-form-button"} variant={"warning"} type={"button"}
                                             onClick={closeWindow}
