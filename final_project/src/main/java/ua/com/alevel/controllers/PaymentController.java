@@ -39,18 +39,15 @@ public class PaymentController {
         return paymentFacade.countNumberOfSearchMatches(request);
     }
 
-
     @PostMapping("/create")
     public Boolean employees(@RequestBody PaymentDto paymentDto) {
         return paymentFacade.create(paymentDto);
     }
 
-
     @GetMapping("/balance")
     public BigDecimal getBalance() {
         return paymentFacade.getBalanceFromLastPayment();
     }
-
 
     @GetMapping("/items")
     public List<PaymentItemDto> getPaymentItems() {

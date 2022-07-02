@@ -2,6 +2,9 @@ package ua.com.alevel.services.impl;
 
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.ProductMaterialDao;
+import ua.com.alevel.dto.PageDataRequest;
+import ua.com.alevel.dto.PageDataResponse;
+import ua.com.alevel.dto.entities.ProductMaterialDto;
 import ua.com.alevel.entities.ProductMaterial;
 import ua.com.alevel.services.ServiceProductMaterial;
 
@@ -47,9 +50,25 @@ public class ProductMaterialService implements ServiceProductMaterial {
         return productDao.findAll();
     }
 
+    public PageDataResponse<ProductMaterialDto> findAllFromRequest(PageDataRequest request) {
+        List<ProductMaterial> productMaterials = productDao.findAllFromRequest(request);
+        PageDataResponse<ProductMaterialDto> dataResponse = new PageDataResponse<>();
+        dataResponse.setDtoEntities(ProductMaterialDto.toDtoList(productMaterials));
+        if(request.getSearchString().equals("")) {
+            dataResponse.setAmountOfElements(count().intValue());
+        } else {
+            dataResponse.setAmountOfElements(countNumberOfSearchMatches(request).intValue());
+        }
+        return dataResponse;
+    }
+
     @Override
     public Long count() {
         return productDao.count();
+    }
+
+    public Long countNumberOfSearchMatches(PageDataRequest request) {
+        return productDao.countNumberOfSearchMatches(request);
     }
 
 }

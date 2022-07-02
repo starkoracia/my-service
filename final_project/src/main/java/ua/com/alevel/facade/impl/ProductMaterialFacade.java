@@ -55,12 +55,12 @@ public class ProductMaterialFacade implements FacadeProductMaterial {
 
     @Override
     public PageDataResponse<ProductMaterialDto> findAllFromRequest(PageDataRequest request) {
-        return null;
+        return productService.findAllFromRequest(request);
     }
 
     @Override
     public Long countNumberOfSearchMatches(PageDataRequest request) {
-        return null;
+        return productService.countNumberOfSearchMatches(request);
     }
 
     @Override

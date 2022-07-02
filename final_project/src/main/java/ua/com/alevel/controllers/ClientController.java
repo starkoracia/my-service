@@ -21,14 +21,12 @@ public class ClientController {
 
     @GetMapping()
     public List<ClientDto> clients() {
-        List<ClientDto> clientDtos = clientFacade.findAll();
-        return clientDtos;
+        return clientFacade.findAll();
     }
 
     @PostMapping()
     public PageDataResponse<ClientDto> clientsFromRequest(@RequestBody PageDataRequest request) {
-        PageDataResponse<ClientDto> dataResponse = clientFacade.findAllFromRequest(request);
-        return dataResponse;
+        return clientFacade.findAllFromRequest(request);
     }
 
     @PostMapping("/matches")

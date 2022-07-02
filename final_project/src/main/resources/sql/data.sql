@@ -32,11 +32,11 @@ VALUES ('Запчасти');
 INSERT INTO product_materials
 (product_category_id, name, description, code, vendor_code, is_warranty,
  warranty_days, zero_cost, repair_cost, trade_cost, number_of, in_stock)
-VALUES (1, 'Защитная пленка', null, null, null, false, 0, 20, 100, 100, 0, false);
+VALUES (1, 'Защитная пленка', '', '', '', false, 0, 20, 100, 100, 0, false);
 INSERT INTO product_materials
 (product_category_id, name, description, code, vendor_code, is_warranty,
  warranty_days, zero_cost, repair_cost, trade_cost, number_of, in_stock)
-VALUES (2, 'Разьем micro-usb', null, null, null, false, 0, 2, 50, 50, 0, false);
+VALUES (2, 'Разьем micro-usb', '', '', '', false, 0, 2, 50, 50, 0, false);
 
 INSERT INTO payment_item (name, income)
 VALUES ('Расчет с поставщиком', false);

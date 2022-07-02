@@ -31,11 +31,6 @@ public class MainController {
         return employeeFacade.findAll();
     }
 
-    @GetMapping("/products")
-    public List<ProductMaterialDto> products() {
-        return productFacade.findAll();
-    }
-
     @GetMapping("/postings")
     public List<WarehousePostingDto> postings() {
         return postingFacade.findAll();
@@ -46,24 +41,6 @@ public class MainController {
         return writeOffFacade.findAll();
     }
 
-    @PostMapping("/products/create")
-    public Boolean createProduct(@RequestBody ProductMaterialDto productMaterialDto) {
-        return productFacade.create(productMaterialDto);
-    }
 
-    @GetMapping("/products/categories")
-    public List<ProductCategoryDto> productCategories() {
-        return productCategoryFacade.findAll();
-    }
-
-    @PostMapping("/products/categories/create")
-    public Boolean createCategory(@RequestBody ProductCategoryDto categoryDto) {
-        return productCategoryFacade.create(categoryDto);
-    }
-
-    @GetMapping("/products/categories/last")
-    public ProductCategoryDto getLastCategory() {
-        return productCategoryFacade.getLastCreatedCategory();
-    }
 
 }
