@@ -1,15 +1,27 @@
 import {Button, Card, Container, Form, Modal} from "react-bootstrap";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Scrollbars} from "react-custom-scrollbars";
+import $ from "jquery";
 import axios from "axios";
 
-export default function AddClientWindow({show, onSubmitAdd, closeAddWindow, showMessage, onClientCreated}) {
+export default function AddClientWindow({show, onSubmitAdd, closeAddWindow,
+                                            showMessage, onClientCreated}) {
     const [isSupplierValue, setIsSupplierValue] = useState(false);
     const [nameInputValue, setNameInputValue] = useState('');
     const [emailInputValue, setEmailInputValue] = useState('');
     const [mobileInputValue, setMobileInputValue] = useState('');
     const [recommendationInputValue, setRecommendationInputValue] = useState('');
     const [annotationInputValue, setAnnotationInputValue] = useState('');
+
+    useEffect(() => {
+        if(show) {
+            initData();
+        }
+    }, [show])
+
+    function initData() {
+        $('.input-text.focus').focus();
+    }
 
     function onSubmit() {
         const client = {
@@ -108,7 +120,7 @@ export default function AddClientWindow({show, onSubmitAdd, closeAddWindow, show
                                 <Form.Group className={"add-form-group"}>
                                     <Form.Label className={'form-group-label'}>Имя клиента<b
                                         className={'red-star'}>*</b></Form.Label>
-                                    <Form.Control type={"text"} className={'input-text'}
+                                    <Form.Control type={"text"} className={'input-text focus'}
                                                   value={nameInputValue}
                                                   onChange={(e) => setNameInputValue(e.target.value)}
                                     />
