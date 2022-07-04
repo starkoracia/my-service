@@ -3,10 +3,13 @@ package ua.com.alevel.dao.impl;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.alevel.dao.DaoWarehousePosting;
+import ua.com.alevel.entities.RelocatableProduct;
 import ua.com.alevel.entities.WarehousePosting;
+import ua.com.alevel.entities.WarehousePosting_;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +72,27 @@ public class WarehousePostingDao implements DaoWarehousePosting {
         return (Long) entityManager
                 .createQuery("select count(wp) from WarehousePosting wp")
                 .getSingleResult();
+    }
+
+    public List<RelocatableProduct> getRelocatableProductsFromPosting(WarehousePosting posting) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<RelocatableProduct> relocatableProductCriteria = cb.createQuery(RelocatableProduct.class);
+        Root<WarehousePosting> postingRoot = relocatableProductCriteria.from(WarehousePosting.class);
+        SetJoin<WarehousePosting, RelocatableProduct> relocatableProductsJoin =
+                postingRoot.join(WarehousePosting_.relocatableProducts);
+
+        Predicate likePostingId =
+                cb.like(postingRoot.get(WarehousePosting_.id).as(String.class), posting.getId().toString());
+
+        relocatableProductCriteria
+                .select(relocatableProductsJoin)
+                .where(likePostingId);
+
+        List<RelocatableProduct> resultList = entityManager
+                .createQuery(relocatableProductCriteria)
+                .getResultList();
+
+        return resultList;
     }
 
 }

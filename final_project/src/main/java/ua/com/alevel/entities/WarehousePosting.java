@@ -27,7 +27,7 @@ public class WarehousePosting extends WarehouseOperation {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "warehouse_posting_relocatable_products",
             joinColumns = @JoinColumn(name = "warehouse_posting_id"),
             inverseJoinColumns = @JoinColumn(name = "relocatable_products_id"))

@@ -22,7 +22,10 @@ public class WarehouseWriteOffFacade implements FacadeWarehouseWriteOff {
 
     @Override
     public Boolean create(WarehouseWriteOffDto dto) {
-        return writeOffService.create(dto.toWriteOff());
+        WarehouseWriteOff writeOff = dto.toWriteOff();
+        Boolean isCreated = writeOffService.create(writeOff);
+        dto.setId(writeOff.getId());
+        return isCreated;
     }
 
     @Override

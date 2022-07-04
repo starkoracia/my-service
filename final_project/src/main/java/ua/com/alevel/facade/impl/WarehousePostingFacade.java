@@ -22,7 +22,10 @@ public class WarehousePostingFacade implements FacadeWarehousePosting {
 
     @Override
     public Boolean create(WarehousePostingDto dto) {
-        return postingService.create(dto.toPosting());
+        WarehousePosting posting = dto.toPosting();
+        Boolean isCreated = postingService.create(posting);
+        dto.setId(posting.getId());
+        return isCreated;
     }
 
     @Override

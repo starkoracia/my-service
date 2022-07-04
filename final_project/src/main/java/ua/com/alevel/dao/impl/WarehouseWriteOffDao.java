@@ -3,10 +3,13 @@ package ua.com.alevel.dao.impl;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.alevel.dao.DaoWarehouseWriteOff;
+import ua.com.alevel.entities.RelocatableProduct;
 import ua.com.alevel.entities.WarehouseWriteOff;
+import ua.com.alevel.entities.WarehouseWriteOff_;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +72,26 @@ public class WarehouseWriteOffDao  implements DaoWarehouseWriteOff {
         return (Long) entityManager
                 .createQuery("select count(wo) from WarehouseWriteOff wo")
                 .getSingleResult();
+    }
+
+    public List<RelocatableProduct> getRelocatableProductsFromWriteOff(WarehouseWriteOff writeOff) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<RelocatableProduct> relocatableProductCriteria = cb.createQuery(RelocatableProduct.class);
+        Root<WarehouseWriteOff> writeOffRoot = relocatableProductCriteria.from(WarehouseWriteOff.class);
+        SetJoin<WarehouseWriteOff, RelocatableProduct> relocatableProductsJoin =
+                writeOffRoot.join(WarehouseWriteOff_.relocatableProducts);
+
+        Predicate likeWriteOffId = cb.like(writeOffRoot.get(WarehouseWriteOff_.id).as(String.class), writeOff.getId().toString());
+
+        relocatableProductCriteria
+                .select(relocatableProductsJoin)
+                .where(likeWriteOffId);
+
+        List<RelocatableProduct> resultList = entityManager
+                .createQuery(relocatableProductCriteria)
+                .getResultList();
+
+        return resultList;
     }
 
 }

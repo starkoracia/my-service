@@ -35,7 +35,6 @@ public class ProductMaterialDao implements DaoProductMaterial {
 
     @Override
     public void update(ProductMaterial productMaterial) {
-        System.out.println(productMaterial);
         entityManager.merge(productMaterial);
     }
 
