@@ -4,7 +4,8 @@ import {Button} from "react-bootstrap";
 import AddClientWindow from "./AddClientWindow";
 import axios from "axios";
 
-function ClientSelect({show, clientSelectValue, setClientSelectValue, showMessage}) {
+function ClientSelect({show, clientSelectValue, setClientSelectValue, showMessage,
+                          isSupplier}) {
 
     const [showAddClient, setShowAddClient] = useState(false);
     const [clientOptions, setClientOptions] = useState([{label: '...', value: null}]);
@@ -62,13 +63,16 @@ function ClientSelect({show, clientSelectValue, setClientSelectValue, showMessag
 
     function convertClientsToOptions(clients) {
         const options = [];
-        clients.forEach((c) => {
-            const label = `${c.name}  ${c.mobile}`
+        clients.forEach((client) => {
+            const label = `${client.name}  ${client.mobile}`
             options.push({
                 label: label,
-                value: c
+                value: client
             })
         });
+        if(isSupplier) {
+            return options.filter(option => option.value.isSupplier);
+        }
         return options;
     }
 
@@ -93,6 +97,7 @@ function ClientSelect({show, clientSelectValue, setClientSelectValue, showMessag
                 closeAddWindow={closeAddWindow}
                 onClientCreated={onClientCreated}
                 showMessage={showMessage}
+                isSupplier={isSupplier}
             />
         </>
     );

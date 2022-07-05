@@ -31,14 +31,14 @@ export default function AddProductCategoryWindow({show, closeAddWindow, showMess
         axios.post('http://localhost:8080/products/categories/create', item)
             .then((response) => {
                 if (response.data === true) {
-                    showMessage('Успешно создан', 'success')
                     onItemCreated();
+                    showMessage('Успешно создан', 'success');
                 } else {
-                    showMessage('Ошибка создания', 'danger')
+                    showMessage('Ошибка создания', 'danger');
                 }
             })
             .catch(function (error) {
-                showMessage('Ошибка создания', 'danger')
+                showMessage('Ошибка создания', 'danger');
                 console.log(error);
             })
     }

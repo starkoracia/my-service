@@ -4,7 +4,8 @@ import {Scrollbars} from "react-custom-scrollbars";
 import axios from "axios";
 import $ from "jquery";
 
-export default function AddPaymentItemWindow({show, closeAddWindow, showMessage, onItemCreated}) {
+export default function AddPaymentItemWindow({show, closeAddWindow, showMessage, onItemCreated,
+                                                 isIncomePayment}) {
 
     const [itemNameInputValue, setItemNameInputValue] = useState('');
     const [isIncomeValue, setIsIncomeValue] = useState(true);
@@ -16,7 +17,7 @@ export default function AddPaymentItemWindow({show, closeAddWindow, showMessage,
     },[show])
 
     function initData() {
-        setIsIncomeValue(true);
+        setIsIncomeValue(isIncomePayment);
         $('.payment-input.input-text').focus();
     }
 
@@ -94,7 +95,8 @@ export default function AddPaymentItemWindow({show, closeAddWindow, showMessage,
                 <Card className={"add-card"}>
                     <Scrollbars style={{width: "100%", height: "100%"}}>
                         <Card.Body className={"add-card-body"}>
-                            <Form className={"add-form"}>
+                            <Form className={"add-form"} 
+                                  onSubmit={(event) => event.preventDefault()}>
                                 <Form.Group className={"add-form-group"}>
                                     <div style={{display: 'flex'}}>
                                         <Form.Check.Label className={'form-group-label radio-green-label'}>
@@ -117,6 +119,7 @@ export default function AddPaymentItemWindow({show, closeAddWindow, showMessage,
                                                     type={'radio'}
                                                     name={'isIncomeRadio'}
                                                     className={'payment-radio'}
+                                                    checked={!isIncomeValue}
                                                     onChange={(e) => {
                                                         setIsIncomeValue(false);
                                                     }}/>

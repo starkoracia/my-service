@@ -6,6 +6,11 @@ import WriteOffTable from "./WriteOffTable";
 
 function WarehouseWindow({showMessage}) {
     const [tabKey, setTabKey] = useState('products');
+    const [showAddPosting, setShowAddPosting] = useState(false);
+
+    function onAddNewPostingButtonClicked() {
+        setShowAddPosting(true);
+    }
 
     return (
         <>
@@ -16,8 +21,7 @@ function WarehouseWindow({showMessage}) {
                         <div className={'plus-minus-buttons-div'}>
                             <button className={'add-button'}
                                     onClick={() => {
-                                        // setIsIncomeProduct(true);
-                                        // setShowAddProduct(true);
+                                        onAddNewPostingButtonClicked();
                                     }}>
                                 <img src={'/images/plus.svg'} className={'plus-svg'}/> Оприходование
                             </button>
@@ -31,22 +35,24 @@ function WarehouseWindow({showMessage}) {
                         </div>
                     </Card.Header>
                     <Card.Body className={'table-wrap'}>
-                            <Tabs
-                                id="controlled-tab-example"
-                                activeKey={tabKey}
-                                onSelect={(k) => setTabKey(k)}
-                                className={'warehouse-tabs'}
-                            >
-                                <Tab eventKey="products" title="Товары" className={'warehouse-tab'}>
-                                    <ProductTable showMessage={showMessage}/>
-                                </Tab>
-                                <Tab eventKey="posting" title="Оприходования">
-                                    <PostingTable showMessage={showMessage}/>
-                                </Tab>
-                                <Tab eventKey="write-off" title="Списания">
-                                    <WriteOffTable showMessage={showMessage}/>
-                                </Tab>
-                            </Tabs>
+                        <Tabs
+                            id="controlled-tab-example"
+                            activeKey={tabKey}
+                            onSelect={(k) => setTabKey(k)}
+                            className={'warehouse-tabs'}
+                        >
+                            <Tab eventKey="products" title="Товары" className={'warehouse-tab'}>
+                                <ProductTable re showMessage={showMessage}/>
+                            </Tab>
+                            <Tab eventKey="posting" title="Оприходования">
+                                <PostingTable showMessage={showMessage}
+                                              showAddPosting={showAddPosting}
+                                              setShowAddPosting={setShowAddPosting}/>
+                            </Tab>
+                            <Tab eventKey="write-off" title="Списания">
+                                <WriteOffTable showMessage={showMessage}/>
+                            </Tab>
+                        </Tabs>
                     </Card.Body>
                 </Card>
             </div>

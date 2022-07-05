@@ -1,9 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
 import axios from "axios";
+import AddPostingWindow from "./AddPostingWindow";
 
 
-function PostingTable({showMessage}) {
+function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
     const [numberOfRows, setNumberOfRows] = useState(10);
     const [pageNumber, setPageNumber] = useState(1);
     const [amountOfElements, setAmountOfElements] = useState(0);
@@ -24,11 +25,15 @@ function PostingTable({showMessage}) {
         annotation: ''
     });
     const [postings, setPostings] = useState([]);
-    const [showAddPosting, setShowAddPosting] = useState(false);
     const [showEditPosting, setShowEditPosting] = useState(false);
     const [showEditClient, setShowEditClient] = useState(false);
-    const [isIncomePosting, setIsIncomePosting] = useState(false);
     const firstTimeRender = useRef(true);
+
+    useEffect(() => {
+        if(showAddPosting) {
+            initData();
+        }
+    },[showAddPosting])
 
     useEffect(() => {
         countAndSetTheTotalOfPages();
@@ -50,6 +55,10 @@ function PostingTable({showMessage}) {
             firstTimeRender.current = false;
         }
     }, [searchField])
+
+    function initData() {
+        console.log('onAddNewPostingButtonClicked');
+    }
 
     function getElements() {
         axios.get('http://localhost:8080/postings')
@@ -290,12 +299,11 @@ function PostingTable({showMessage}) {
             {/*    onClientEdited={() => {getElements()}}*/}
             {/*    editingClient={editingClient}*/}
             {/*    showMessage={showMessage}/>*/}
-            {/*<AddPostingWindow*/}
-            {/*    show={showAddPosting}*/}
-            {/*    closeWindow={() => setShowAddPosting(false)}*/}
-            {/*    onPostingCreated={onPostingCreated}*/}
-            {/*    isIncomePosting={isIncomePosting}*/}
-            {/*    showMessage={showMessage}/>*/}
+            <AddPostingWindow
+                show={showAddPosting}
+                closeWindow={() => setShowAddPosting(false)}
+                onPostingCreated={onPostingCreated}
+                showMessage={showMessage} />
             {/*<EditPostingWindow*/}
             {/*    show={showEditPosting}*/}
             {/*    onHide={closeEditWindow}*/}

@@ -6,6 +6,7 @@ import Select from "react-select";
 import $ from "jquery";
 import ClientSelect from "./ClientSelect";
 import PaymentItemSelect from "./PaymentItemSelect";
+import EmployeeSelect from "./EmployeeSelect";
 
 export default function AddPaymentWindow({
                                              show, closeWindow, isIncomePayment,
@@ -26,7 +27,6 @@ export default function AddPaymentWindow({
     }, [show])
 
     function initData() {
-        getEmployees();
         if (isIncomePayment) {
             setCommentValue('Приход денег');
         } else {
@@ -79,35 +79,6 @@ export default function AddPaymentWindow({
                 showMessage('Ошибка создания', 'danger')
                 console.log(error);
             })
-    }
-
-    function getEmployees() {
-        axios.get('http://localhost:8080/employees')
-            .then((response) => {
-                createAndSetEmployeeOptions(response.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-    }
-
-    function convertEmployeesToOptions(employees) {
-        const options = [];
-        employees.filter((i) => i.position === 'SELLER')
-            .forEach((i) => {
-                const label = `${i.name}`
-                options.push({
-                    label: label,
-                    value: i
-                })
-            });
-        return options;
-    }
-
-    function createAndSetEmployeeOptions(employees) {
-        const options = convertEmployeesToOptions(employees);
-        setCashierSelectValue(options[0]);
-        setCashierOptions(options);
     }
 
     function isAmountNotValid() {
@@ -223,9 +194,12 @@ export default function AddPaymentWindow({
                                                 Кассир
                                                 <b className={'red-star'}>*</b>
                                             </Form.Label>
-                                            <Select options={cashierOptions}
-                                                    value={cashierSelectValue}
-                                                    onChange={setCashierSelectValue}/>
+                                            <EmployeeSelect
+                                                show={show}
+                                                isSeller={true}
+                                                showMessage={showMessage}
+                                                employeeSelectValue={cashierSelectValue}
+                                                setEmployeeSelectValue={setCashierSelectValue} />
                                         </Form.Group>
                                     </Form>
                                 </Card.Body>

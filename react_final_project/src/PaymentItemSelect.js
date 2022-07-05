@@ -4,7 +4,8 @@ import {Button} from "react-bootstrap";
 import axios from "axios";
 import AddPaymentItemWindow from "./AddPaymentItemWindow";
 
-function PaymentItemSelect({show, itemSelectValue, setItemSelectValue, showMessage, isIncomePayment}) {
+function PaymentItemSelect({show, itemSelectValue, setItemSelectValue,
+                               showMessage, isIncomePayment}) {
 
     const [showAddItem, setShowAddItem] = useState(false);
     const [itemOptions, setItemOptions] = useState([{label: '...', value: null}]);
@@ -94,6 +95,7 @@ function PaymentItemSelect({show, itemSelectValue, setItemSelectValue, showMessa
                 closeAddWindow={closeAddWindow}
                 onItemCreated={onItemCreated}
                 showMessage={showMessage}
+                isIncomePayment={isIncomePayment}
             />
         </>
     );

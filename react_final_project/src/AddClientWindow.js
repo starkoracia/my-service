@@ -4,8 +4,10 @@ import {Scrollbars} from "react-custom-scrollbars";
 import $ from "jquery";
 import axios from "axios";
 
-export default function AddClientWindow({show, onSubmitAdd, closeAddWindow,
-                                            showMessage, onClientCreated}) {
+export default function AddClientWindow({
+                                            show, isSupplier, closeAddWindow,
+                                            showMessage, onClientCreated
+                                        }) {
     const [isSupplierValue, setIsSupplierValue] = useState(false);
     const [nameInputValue, setNameInputValue] = useState('');
     const [emailInputValue, setEmailInputValue] = useState('');
@@ -14,12 +16,15 @@ export default function AddClientWindow({show, onSubmitAdd, closeAddWindow,
     const [annotationInputValue, setAnnotationInputValue] = useState('');
 
     useEffect(() => {
-        if(show) {
+        if (show) {
             initData();
         }
     }, [show])
 
     function initData() {
+        if (isSupplier) {
+            setIsSupplierValue(true);
+        }
         $('.input-text.focus').focus();
     }
 
@@ -40,7 +45,7 @@ export default function AddClientWindow({show, onSubmitAdd, closeAddWindow,
     function createClient(client) {
         axios.post('http://localhost:8080/clients/create', client)
             .then((response) => {
-                if(response.data === true) {
+                if (response.data === true) {
                     showMessage('Успешно создан', 'success')
                     onClientCreated();
                 } else {
@@ -63,7 +68,7 @@ export default function AddClientWindow({show, onSubmitAdd, closeAddWindow,
     }
 
     function isNameNotValid() {
-        if(nameInputValue.trim() === '') {
+        if (nameInputValue.trim() === '') {
             return true;
         }
         return false;
@@ -74,7 +79,7 @@ export default function AddClientWindow({show, onSubmitAdd, closeAddWindow,
     }
 
     function nameInvalidMessage() {
-        if(isNameNotValid()) {
+        if (isNameNotValid()) {
             return (
                 <Form.Text className={'invalid-message'}>
                     Имя не должно быть пустым!
@@ -97,7 +102,7 @@ export default function AddClientWindow({show, onSubmitAdd, closeAddWindow,
     >
         <Modal.Header closeButton>
             <Modal.Title>
-                Новый клиент
+                Новый клиент {isSupplier && '(поставщик)'}
             </Modal.Title>
         </Modal.Header>
         <Modal.Body className={"add-modal-body"}>
@@ -112,7 +117,8 @@ export default function AddClientWindow({show, onSubmitAdd, closeAddWindow,
                                         <Form.Check type={'checkbox'} placeholder={"Поставщик"}>
                                             <Form.Check.Input className={'checkbox'}
                                                               checked={isSupplierValue}
-                                                              onChange={(e) => setIsSupplierValue(e.target.checked)}/>
+                                                              onChange={(e) => setIsSupplierValue(e.target.checked)}
+                                                              disabled={isSupplier} />
                                         </Form.Check>
                                         <img src={'/images/supplier.svg'} className={'supplier-checkbox-svg'}/>Поставщик
                                     </Form.Label>
@@ -163,7 +169,7 @@ export default function AddClientWindow({show, onSubmitAdd, closeAddWindow,
                     <Card.Footer className={"add-card-footer"}>
                         <div className={"add-cancel-buttons-div"}>
                             <Button className={"add-form-button"} variant={"secondary"} type={"button"}
-                                disabled={isFormNotValid()}
+                                    disabled={isFormNotValid()}
                                     onClick={onSubmit}>
                                 Добавить
                             </Button>

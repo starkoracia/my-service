@@ -201,9 +201,6 @@ function ProductTable({showMessage}) {
 
     const createRowColumns = (product) => {
         let rowColumns = [];
-        // const date = new Date(Date.parse(product.dateTime));
-        // const supplierSvg = client.isSupplier &&
-        //     <img src={'/images/supplier.svg'} className={'supplier-svg'}/>
 
         let idColumn = <td key={'id'}> {product.id}</td>;
         rowColumns.push(idColumn);

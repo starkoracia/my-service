@@ -58,25 +58,32 @@ class Table extends Component {
         const onClickEdit = this.props.onClickEdit;
         const onClickDelete = this.props.onClickDelete;
         const createRowColumns = this.props.createRowColumns;
+        const searchFieldRemove = this.props.searchFieldRemove;
+        const paginationRemove = this.props.paginationRemove;
         return (
-            <Container className={'table-wrap'}>
-                <Card className={'table-card'}>
+            <Container className={'table-wrap ' + (searchFieldRemove && 'auto-width')}>
+                <Card className={'table-card ' + (searchFieldRemove && 'auto-height')}>
                     <Card.Header className={'table-card-header'}>
                         {tableCardHeader}
-                        <Container className={'search-container'}>
-                            <label className={'search-matches-label'}>Cовпадений: {searchMatches}</label>
-                            <Form className="search-form d-flex" onSubmit={onSearchSubmit}>
-                                <FormControl
-                                    size={"sm"}
-                                    type="search"
-                                    placeholder="Поиск"
-                                    className="me-2 search-input"
-                                    aria-label="Search"
-                                    onChange={onChangeSearchField}
-                                />
-                                <Button type={'submit'} className={'search-button'} size={"sm"} variant="outline-success">Найти</Button>
-                            </Form>
-                        </Container>
+                        {searchFieldRemove
+                            ? <></>
+                            :
+                            <Container className={'search-container'}>
+                                <label className={'search-matches-label'}>Cовпадений: {searchMatches}</label>
+                                <Form className="search-form d-flex" onSubmit={onSearchSubmit}>
+                                    <FormControl
+                                        size={"sm"}
+                                        type="search"
+                                        placeholder="Поиск"
+                                        className="me-2 search-input"
+                                        aria-label="Search"
+                                        onChange={onChangeSearchField}
+                                    />
+                                    <Button type={'submit'} className={'search-button'} size={"sm"}
+                                            variant="outline-success">Найти</Button>
+                                </Form>
+                            </Container>
+                        }
                     </Card.Header>
                     <Card.Body className={'table-card-body'}>
                         <TableBs striped bordered hover>
@@ -95,29 +102,33 @@ class Table extends Component {
                             />
                         </TableBs>
                     </Card.Body>
-                    <Card.Footer>
-                        <Container className={'table-footer'}>
-                            <label id={'show-total-rows'}>
-                                с <b>{countFirstPageElement()}</b> по <b>{countLastPageElement()}</b>  [ Всего:
-                                 <b> {amountOfElements}</b> ]</label>
-                            <div id={'number-of-rows-div'}>
-                                <Form.Select value={numberOfRows}
-                                             id={'number-of-rows-select'}
-                                             size="sm"
-                                             onChange={onChangeNumberOfRowsHandler}>
-                                    <option value={5}>5</option>
-                                    <option value={10}>10</option>
-                                    <option value={25}>25</option>
-                                    <option value={50}>50</option>
-                                </Form.Select>
-                            </div>
-                            <PaginationDiv
-                                paginationOnClick={this.props.paginationOnClick}
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                            />
-                        </Container>
-                    </Card.Footer>
+                    {paginationRemove
+                        ? <></>
+                        :
+                        <Card.Footer>
+                            <Container className={'table-footer'}>
+                                <label id={'show-total-rows'}>
+                                    с <b>{countFirstPageElement()}</b> по <b>{countLastPageElement()}</b> [ Всего:
+                                    <b> {amountOfElements}</b> ]</label>
+                                <div id={'number-of-rows-div'}>
+                                    <Form.Select value={numberOfRows}
+                                                 id={'number-of-rows-select'}
+                                                 size="sm"
+                                                 onChange={onChangeNumberOfRowsHandler}>
+                                        <option value={5}>5</option>
+                                        <option value={10}>10</option>
+                                        <option value={25}>25</option>
+                                        <option value={50}>50</option>
+                                    </Form.Select>
+                                </div>
+                                <PaginationDiv
+                                    paginationOnClick={this.props.paginationOnClick}
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                />
+                            </Container>
+                        </Card.Footer>
+                    }
                 </Card>
             </Container>
         );

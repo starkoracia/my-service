@@ -10,12 +10,12 @@ function ProductCategorySelect({show, itemSelectValue, setItemSelectValue, showM
     const [itemOptions, setItemOptions] = useState([{label: '...', value: null}]);
 
     useEffect(() => {
-        initData();
+        // initData();
     }, [])
 
     useEffect(() => {
         if (show) {
-
+            initData();
         }
     }, [show])
 
