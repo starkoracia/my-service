@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/payments")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${cross.origin.url}")
 public class PaymentController {
 
     PaymentFacade paymentFacade;

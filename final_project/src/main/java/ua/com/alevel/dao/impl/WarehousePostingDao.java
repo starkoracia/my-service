@@ -10,8 +10,10 @@ import ua.com.alevel.entities.WarehousePosting_;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @Transactional

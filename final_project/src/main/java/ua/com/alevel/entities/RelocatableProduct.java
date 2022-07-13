@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Table(name = "relocatable_products")
 @Entity
@@ -23,5 +24,8 @@ public class RelocatableProduct extends BaseEntity{
 
     @Column(name = "number_of")
     private Integer numberOf;
+
+    @Column(name = "price")
+    private BigDecimal price;
 
 }

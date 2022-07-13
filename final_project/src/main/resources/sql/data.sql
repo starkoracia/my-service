@@ -36,7 +36,7 @@ VALUES (1, 'Защитная пленка', '', '', '', false, 0, 20, 100, 100, 
 INSERT INTO product_materials
 (product_category_id, name, description, code, vendor_code, is_warranty,
  warranty_days, zero_cost, repair_cost, trade_cost, number_of, in_stock)
-VALUES (2, 'Разьем micro-usb', '', '', '', false, 0, 2, 50, 50, 0, false);
+VALUES (2, 'Разьем micro-usb', '', '', '', false, 0, 20, 50, 50, 0, false);
 
 INSERT INTO payment_item (name, income)
 VALUES ('Расчет с поставщиком', false);
@@ -44,21 +44,21 @@ INSERT INTO payment_item (name, income)
 VALUES ('Оплата за заказ', true);
 
 INSERT INTO relocatable_products
-    (product_material_id, number_of)
-VALUES (1, 10);
+    (product_material_id, number_of, price)
+VALUES (1, 10, '20');
 INSERT INTO relocatable_products
-    (product_material_id, number_of)
-VALUES (2, 5);
+    (product_material_id, number_of, price)
+VALUES (2, 5, '50');
 
 INSERT INTO payments
 (payment_item_id, amount, income, date_time,
  balance_before, balance_after, comment,
  employee_id, client_id, order_id)
-VALUES (1, 300, false, '2022-02-15 13:00:02', 0, -300, 'Оплата за заказ', 1, 2, null);
+VALUES (1, 450, false, '2022-02-15 13:00:02', 0, -450, 'Оплата за заказ', 1, 2, null);
 
 INSERT INTO warehouse_posting
     (supplier_id, description, employee_id, date_time, payment_id)
-VALUES (2, null, 1, '2022-02-15 12:45:53', 1);
+VALUES (2, '', 1, '2022-02-15 12:45:53', 1);
 
 INSERT INTO warehouse_posting_relocatable_products
     (warehouse_posting_id, relocatable_products_id)
@@ -116,8 +116,8 @@ INSERT INTO relocatable_products
     (product_material_id, number_of)
 VALUES (2, 1);
 
-INSERT INTO warehouse_write_off (description, employee_id, date_time, order_id, payment_id)
-VALUES ('Списание товара в заказ', 1, '2022-02-23 12:34:07', 1, null);
+INSERT INTO warehouse_write_off (description, employee_id, date_time, order_id, payment_id, client_id)
+VALUES ('Списание товара в заказ', 1, '2022-02-23 12:34:07', 1, null, null);
 
 INSERT INTO warehouse_write_off_relocatable_products (warehouse_write_off_id, relocatable_products_id)
 VALUES (1, 3);

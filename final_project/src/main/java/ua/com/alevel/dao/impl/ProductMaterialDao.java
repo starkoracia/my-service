@@ -145,4 +145,11 @@ public class ProductMaterialDao implements DaoProductMaterial {
                 .getSingleResult();
     }
 
+    public ProductMaterial getLastCreatedProduct() {
+        ProductMaterial productMaterial = (ProductMaterial) entityManager.createQuery("select pr from ProductMaterial pr where " +
+                        "pr.id=(select max(pr.id) from ProductMaterial pr)")
+                .getSingleResult();
+        return productMaterial;
+    }
+
 }

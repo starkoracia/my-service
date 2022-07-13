@@ -3,7 +3,9 @@ package ua.com.alevel.facade.impl;
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dto.PageDataRequest;
 import ua.com.alevel.dto.PageDataResponse;
+import ua.com.alevel.dto.entities.RelocatableProductDto;
 import ua.com.alevel.dto.entities.WarehouseWriteOffDto;
+import ua.com.alevel.entities.RelocatableProduct;
 import ua.com.alevel.entities.WarehouseWriteOff;
 import ua.com.alevel.facade.FacadeWarehouseWriteOff;
 import ua.com.alevel.services.impl.WarehouseWriteOffService;
@@ -67,6 +69,11 @@ public class WarehouseWriteOffFacade implements FacadeWarehouseWriteOff {
     @Override
     public Long count() {
         return writeOffService.count();
+    }
+
+    public List<RelocatableProductDto> getRelocatableProductsFromWriteOff(WarehouseWriteOffDto writeOffDto) {
+        List<RelocatableProduct> relocatableProductsFromWriteOff = writeOffService.getRelocatableProductsFromWriteOff(writeOffDto.toWriteOff());
+        return RelocatableProductDto.toDtoList(relocatableProductsFromWriteOff);
     }
 
 }

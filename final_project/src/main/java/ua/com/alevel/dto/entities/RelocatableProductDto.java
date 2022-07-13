@@ -4,6 +4,7 @@ import lombok.Data;
 import ua.com.alevel.entities.RelocatableProduct;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -11,12 +12,14 @@ public class RelocatableProductDto extends BaseDto<RelocatableProduct> {
     private Long id;
     private ProductMaterialDto productMaterial;
     private Integer numberOf;
+    private BigDecimal price;
 
     public RelocatableProduct toRelocatableProduct() {
         RelocatableProduct relocatable = new RelocatableProduct();
         relocatable.setId(this.id);
         relocatable.setProductMaterial(this.productMaterial != null ? this.productMaterial.toProductMaterial() : null);
         relocatable.setNumberOf(this.numberOf);
+        relocatable.setPrice(this.price);
         return relocatable;
     }
 
@@ -28,6 +31,7 @@ public class RelocatableProductDto extends BaseDto<RelocatableProduct> {
         dto.setId(relocatable.getId());
         dto.setProductMaterial(ProductMaterialDto.toDto(relocatable.getProductMaterial()));
         dto.setNumberOf(relocatable.getNumberOf());
+        dto.setPrice(relocatable.getPrice());
         return dto;
     }
 

@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${cross.origin.url}")
 public class ProductMaterialController {
 
     ProductMaterialFacade productFacade;
@@ -47,6 +47,11 @@ public class ProductMaterialController {
     public Boolean editProduct(@RequestBody ProductMaterialDto productMaterialDto) {
         productFacade.update(productMaterialDto);
         return true;
+    }
+
+    @GetMapping("/last")
+    public ProductMaterialDto getLastCreatedProduct() {
+        return productFacade.getLastCreatedProduct();
     }
 
     @GetMapping("/categories")

@@ -42,11 +42,11 @@ public class Payment extends BaseEntity {
     @Column(name = "comment")
     private String comment;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee cashier;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
 

@@ -71,4 +71,8 @@ public class ProductMaterialService implements ServiceProductMaterial {
         return productDao.countNumberOfSearchMatches(request);
     }
 
+    public ProductMaterialDto getLastCreatedProduct() {
+        return ProductMaterialDto.toDto(productDao.getLastCreatedProduct());
+    }
+
 }

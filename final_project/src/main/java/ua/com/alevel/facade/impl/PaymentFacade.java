@@ -23,7 +23,10 @@ public class PaymentFacade implements FacadePayment {
 
     @Override
     public Boolean create(PaymentDto dto) {
-        return paymentService.create(dto.toPayment());
+        Payment payment = dto.toPayment();
+        Boolean isCreated = paymentService.create(payment);
+        dto.setId(payment.getId());
+        return isCreated;
     }
 
     @Override

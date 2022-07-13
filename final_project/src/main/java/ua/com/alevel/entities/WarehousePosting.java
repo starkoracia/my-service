@@ -44,7 +44,7 @@ public class WarehousePosting extends WarehouseOperation {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar dateTime;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "payment_id")
     private Payment payment;
 

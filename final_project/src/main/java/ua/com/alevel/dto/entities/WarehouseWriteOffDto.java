@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Data
 public class WarehouseWriteOffDto extends BaseDto<WarehouseWriteOff> {
     private Long id;
+    private ClientDto client;
     private Set<RelocatableProductDto> relocatableProducts = new LinkedHashSet<>();
     private String description;
     private EmployeeDto employee;
@@ -23,6 +24,7 @@ public class WarehouseWriteOffDto extends BaseDto<WarehouseWriteOff> {
     public WarehouseWriteOff toWriteOff() {
         WarehouseWriteOff writeOff = new WarehouseWriteOff();
         writeOff.setId(this.id);
+        writeOff.setClient(this.client != null ? this.client.toClient() : null);
         writeOff.setRelocatableProducts(this.relocatableProducts.stream()
                 .map(RelocatableProductDto::toRelocatableProduct)
                 .collect(Collectors.toSet()));
@@ -40,6 +42,7 @@ public class WarehouseWriteOffDto extends BaseDto<WarehouseWriteOff> {
         }
         WarehouseWriteOffDto dto = new WarehouseWriteOffDto();
         dto.setId(writeOff.getId());
+        dto.setClient(ClientDto.toDto(writeOff.getClient()));
         dto.setDescription(writeOff.getDescription());
         dto.setEmployee(EmployeeDto.toDto(writeOff.getEmployee()));
         dto.setDateTime(writeOff.getDateTime());

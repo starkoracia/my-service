@@ -68,4 +68,8 @@ public class ProductMaterialFacade implements FacadeProductMaterial {
         return productService.count();
     }
 
+    public ProductMaterialDto getLastCreatedProduct() {
+        return productService.getLastCreatedProduct();
+    }
+
 }

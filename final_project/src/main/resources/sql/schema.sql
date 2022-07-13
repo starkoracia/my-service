@@ -60,9 +60,9 @@ CREATE TABLE product_materials
     vendor_code         VARCHAR(255)          NULL,
     is_warranty         BIT(1)                NULL,
     warranty_days       INT                   NULL,
-    zero_cost           DECIMAL(20)               NULL,
-    repair_cost         DECIMAL(20)               NULL,
-    trade_cost          DECIMAL(20)               NULL,
+    zero_cost           DECIMAL(20)           NULL,
+    repair_cost         DECIMAL(20)           NULL,
+    trade_cost          DECIMAL(20)           NULL,
     number_of           INT                   NULL,
     in_stock            BIT(1)                NULL,
     CONSTRAINT pk_product_materials PRIMARY KEY (id)
@@ -76,6 +76,7 @@ CREATE TABLE relocatable_products
     id                  BIGINT AUTO_INCREMENT NOT NULL,
     product_material_id BIGINT                NULL,
     number_of           INT                   NULL,
+    price               VARCHAR(255)          NULL,
     CONSTRAINT pk_relocatable_products PRIMARY KEY (id)
 );
 
@@ -125,7 +126,7 @@ CREATE TABLE orders
     estimated_price VARCHAR(255)          NULL,
     quickly         BIT(1)                NOT NULL,
     deadline        datetime              NOT NULL,
-    prepayment      DECIMAL(20)               NOT NULL,
+    prepayment      DECIMAL(20)           NOT NULL,
     manager_id      BIGINT                NOT NULL,
     doer_id         BIGINT                NULL,
     doer_note       VARCHAR(255)          NULL,
@@ -146,11 +147,11 @@ CREATE TABLE payments
 (
     id              BIGINT AUTO_INCREMENT NOT NULL,
     payment_item_id INT                   NOT NULL,
-    amount          DECIMAL(20)               NULL,
+    amount          DECIMAL(20)           NULL,
     income          BIT(1)                NULL,
     date_time       datetime              NULL,
-    balance_before  DECIMAL(20)               NULL,
-    balance_after   DECIMAL(20)               NULL,
+    balance_before  DECIMAL(20)           NULL,
+    balance_after   DECIMAL(20)           NULL,
     comment         VARCHAR(255)          NULL,
     employee_id     BIGINT                NOT NULL,
     client_id       BIGINT                NULL,
@@ -174,7 +175,7 @@ CREATE TABLE warehouse_posting
 (
     id            BIGINT AUTO_INCREMENT NOT NULL,
     supplier_id   BIGINT                NOT NULL,
-    `description` VARCHAR(255)          NULL,
+    `description` VARCHAR(2000)         NULL,
     employee_id   BIGINT                NOT NULL,
     date_time     datetime              NULL,
     payment_id    BIGINT                NULL,
@@ -193,6 +194,7 @@ ALTER TABLE warehouse_posting
 CREATE TABLE warehouse_write_off
 (
     id            BIGINT AUTO_INCREMENT NOT NULL,
+    client_id     BIGINT                NULL,
     `description` VARCHAR(255)          NULL,
     employee_id   BIGINT                NULL,
     date_time     datetime              NULL,
@@ -200,6 +202,9 @@ CREATE TABLE warehouse_write_off
     payment_id    BIGINT                NULL,
     CONSTRAINT pk_warehouse_write_off PRIMARY KEY (id)
 );
+
+ALTER TABLE warehouse_write_off
+    ADD CONSTRAINT FK_WAREHOUSE_WRITE_OFF_ON_CLIENT FOREIGN KEY (client_id) REFERENCES clients (id);
 
 ALTER TABLE warehouse_write_off
     ADD CONSTRAINT FK_WAREHOUSE_WRITE_OFF_ON_EMPLOYEE FOREIGN KEY (employee_id) REFERENCES employees (id);
@@ -212,7 +217,7 @@ ALTER TABLE warehouse_write_off
 
 CREATE TABLE IF NOT EXISTS orders_job_and_materials
 (
-    order_id    BIGINT NOT NULL,
+    order_id             BIGINT NOT NULL,
     job_and_materials_id BIGINT NOT NULL,
     CONSTRAINT pk_orders_job_and_materials PRIMARY KEY (order_id, job_and_materials_id),
     CONSTRAINT fk_order_id FOREIGN KEY (order_id) REFERENCES orders (id),
@@ -221,7 +226,7 @@ CREATE TABLE IF NOT EXISTS orders_job_and_materials
 
 CREATE TABLE IF NOT EXISTS warehouse_write_off_relocatable_products
 (
-    warehouse_write_off_id    BIGINT NOT NULL,
+    warehouse_write_off_id  BIGINT NOT NULL,
     relocatable_products_id BIGINT NOT NULL,
     CONSTRAINT pk_warehouse_write_off_product_materials PRIMARY KEY (warehouse_write_off_id, relocatable_products_id),
     CONSTRAINT fk_warehouse_write_off_id FOREIGN KEY (warehouse_write_off_id) REFERENCES warehouse_write_off (id),

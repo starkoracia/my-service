@@ -22,6 +22,10 @@ public class WarehouseWriteOff extends WarehouseOperation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "client_id")
+    private Client client;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany(cascade = CascadeType.MERGE)
