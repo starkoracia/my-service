@@ -60,8 +60,10 @@ class Table extends Component {
         const createRowColumns = this.props.createRowColumns;
         const searchFieldRemove = this.props.searchFieldRemove;
         const paginationRemove = this.props.paginationRemove;
+        const disabled = this.props.disabled;
         return (
-            <Container className={'table-wrap ' + (searchFieldRemove && 'auto-width')}>
+            <Container className={`table-wrap ` + (searchFieldRemove && 'auto-width')}
+            style={disabled && {pointerEvents: 'none'}}>
                 <Card className={'table-card ' + (searchFieldRemove && 'auto-height')}>
                     <Card.Header className={'table-card-header'}>
                         {tableCardHeader}

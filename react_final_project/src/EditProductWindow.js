@@ -1,7 +1,7 @@
 import {Button, Card, Container, Form, Modal} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import {Scrollbars} from "react-custom-scrollbars";
-import axios from "axios";
+import axios from "./api/axios";
 import $ from "jquery";
 import ProductCategorySelect from "./ProductCategorySelect";
 
@@ -84,6 +84,8 @@ export default function EditProductWindow({
             zeroCost: zeroCostValue,
             repairCost: repairCostValue,
             tradeCost: tradeCostValue,
+            numberOf: productToEdit.numberOf,
+            inStock: productToEdit.inStock
         }
         console.log(product);
         editProduct(product);
@@ -91,7 +93,7 @@ export default function EditProductWindow({
     }
 
     function editProduct(product) {
-        axios.post('http://localhost:8080/products/edit', product)
+        axios.post('/products/edit', product)
             .then((response) => {
                 console.log(response.data);
                 if (response.data === true) {
@@ -167,7 +169,7 @@ export default function EditProductWindow({
                                             <ProductCategorySelect
                                                 itemSelectValue={productCategorySelectValue}
                                                 setItemSelectValue={setProductCategorySelectValue}
-                                                showMessage={showMessage} />
+                                                showMessage={showMessage}/>
                                         </Form.Group>
                                         <hr/>
                                         <Form.Group className={"add-form-group"}>

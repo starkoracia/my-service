@@ -1,10 +1,13 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
-import axios from "axios";
+import axios from "./api/axios";
 import {Card, Container, Tab, Tabs} from "react-bootstrap";
+import AddWriteOffWindow from "./AddWriteOffWindow";
+import EditClientWindow from "./EditClientWindow";
+import EditWriteOffWindow from "./EditWriteOffWindow";
 
 
-function WriteOffTable({showMessage}) {
+function WriteOffTable({showMessage, showAddWriteOff, setShowAddWriteOff}) {
     const [numberOfRows, setNumberOfRows] = useState(10);
     const [pageNumber, setPageNumber] = useState(1);
     const [amountOfElements, setAmountOfElements] = useState(0);
@@ -12,7 +15,7 @@ function WriteOffTable({showMessage}) {
     const [searchField, setSearchField] = useState('');
     const [searchMatches, setSearchMatches] = useState(0);
     const [sort, setSort] = useState({sortField: 'id', isAsc: true});
-    const [editingWriteOff, setEditingWriteOff] = useState({
+    const [writeOffToEdit, setWriteOffToEdit] = useState({
         id: 0,
     });
     const [editingClient, setEditingClient] = useState({
@@ -25,11 +28,18 @@ function WriteOffTable({showMessage}) {
         annotation: ''
     });
     const [writeOffs, setWriteOffs] = useState([]);
-    const [showAddWriteOff, setShowAddWriteOff] = useState(false);
     const [showEditWriteOff, setShowEditWriteOff] = useState(false);
     const [showEditClient, setShowEditClient] = useState(false);
-    const [isIncomeWriteOff, setIsIncomeWriteOff] = useState(false);
     const firstTimeRender = useRef(true);
+
+    useEffect(() => {
+        if (showAddWriteOff) {
+            initData();
+        }
+        if (showAddWriteOff == false) {
+            getElements();
+        }
+    }, [showAddWriteOff])
 
     useEffect(() => {
         countAndSetTheTotalOfPages();
@@ -52,8 +62,12 @@ function WriteOffTable({showMessage}) {
         }
     }, [searchField])
 
+    function initData() {
+
+    }
+
     function getElements() {
-        axios.get('http://localhost:8080/write_offs')
+        axios.get('/write_offs')
             //     numberOfElementsOnPage: numberOfRows,
             //     pageNumber: pageNumber,
             //     searchString: searchField,
@@ -61,7 +75,6 @@ function WriteOffTable({showMessage}) {
             //     sortBy: sort.sortField
             // })
             .then((response) => {
-                console.log(response.data);
                 setWriteOffs(response.data);
                 // setAmountOfElements(response.data.amountOfElements);
             })
@@ -70,8 +83,8 @@ function WriteOffTable({showMessage}) {
             })
     }
 
-    function editWriteOff(client) {
-        axios.post('http://localhost:8080/writeOffs/edit', client)
+    function editWriteOff(writeOff) {
+        axios.post('/writeOffs/edit', writeOff)
             .then((response) => {
                 if (response.data === true) {
                     showMessage('Успешно сохранен', 'success')
@@ -87,7 +100,7 @@ function WriteOffTable({showMessage}) {
     }
 
     const getNumberOfSearchMatches = () => {
-        axios.post('http://localhost:8080/writeOffs/matches', {
+        axios.post('/writeOffs/matches', {
             searchString: searchField
         })
             .then((response) => {
@@ -156,14 +169,27 @@ function WriteOffTable({showMessage}) {
         setSort({sortField: sortName, isAsc: isAscNew});
     }
 
-    const onDblClick = (client) => {
-        setEditingWriteOff(client);
-        setShowEditWriteOff(true);
+    const onDblClick = (writeOff) => {
+        setRelocatableProductsToWriteOff(writeOff, (writeOff) => {
+            setWriteOffToEdit(writeOff);
+            setShowEditWriteOff(true);
+        });
     }
 
-    function onWriteOffClick(e, client) {
-        onDblClick(client);
-        e.preventDefault();
+    function onWriteOffEdited() {
+        setShowEditWriteOff(false);
+        getElements();
+    }
+
+    function setRelocatableProductsToWriteOff(writeOff, callback) {
+        axios.post('/write_offs/relocatable_products', writeOff)
+            .then(response => {
+                writeOff.relocatableProducts = response.data;
+                callback(writeOff);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     function closeAddWindow() {
@@ -178,8 +204,8 @@ function WriteOffTable({showMessage}) {
         getElements();
     }
 
-    function onSubmitEdit(client) {
-        editWriteOff(client);
+    function onSubmitEdit(writeOff) {
+        editWriteOff(writeOff);
         closeEditWindow();
     }
 
@@ -194,22 +220,6 @@ function WriteOffTable({showMessage}) {
         return (
             <>
                 <h4 style={{whiteSpace: 'pre'}}>{tableName}</h4>
-                {/*<div className={'plus-minus-buttons-div'}>*/}
-                {/*    <button className={'add-button'}*/}
-                {/*            onClick={() => {*/}
-                {/*                setIsIncomeWriteOff(true);*/}
-                {/*                setShowAddWriteOff(true);*/}
-                {/*            }}>*/}
-                {/*        <img src={'/images/plus.svg'} className={'plus-svg'}/> Оприходование*/}
-                {/*    </button>*/}
-                {/*    <button className={'minus-button'}*/}
-                {/*            onClick={() => {*/}
-                {/*                setIsIncomeWriteOff(false);*/}
-                {/*                setShowAddWriteOff(true);*/}
-                {/*            }}>*/}
-                {/*        <img src={'/images/minus.svg'} className={'plus-svg'}/> Списание*/}
-                {/*    </button>*/}
-                {/*</div>*/}
             </>
         )
     }
@@ -217,7 +227,8 @@ function WriteOffTable({showMessage}) {
     const getHeaderFieldNamesMap = () => {
         const headerFieldArray = [
             {headerName: 'Id', fieldName: 'id'},
-            {headerName: 'Время', fieldName: 'dateTime'},
+            {headerName: 'Клиент', fieldName: 'client'},
+            {headerName: 'Ответственный/Время', fieldName: 'dateTime'},
             {headerName: 'Описание', fieldName: 'description'},
             {headerName: 'Заказ', fieldName: 'order'},
             {headerName: 'Цена', fieldName: 'payment'},
@@ -235,6 +246,19 @@ function WriteOffTable({showMessage}) {
 
         let idColumn = <td key={'id'}> {writeOff.id}</td>;
         rowColumns.push(idColumn);
+        let clientColumn = <td key={'client'} style={{whiteSpace: 'pre'}}> {'--'} </td>;
+        if (writeOff.client) {
+            const client = writeOff.client;
+            const supplierSvg = client.isSupplier &&
+                <img src={'/images/supplier.svg'} className={'supplier-svg'}/>
+            clientColumn = <td key={'supplier'} style={{whiteSpace: 'pre'}}>
+                <a href={'#'}
+                   onClick={(e) => onClientClick(e, client)}>
+                    {client.name}
+                </a>
+                {supplierSvg}</td>;
+        }
+        rowColumns.push(clientColumn);
         let dateTimeColumn = <td key={'dateTime'}>
             <div className={'two-line-div'}>
                 <span>{writeOff.employee.name}</span>
@@ -244,9 +268,9 @@ function WriteOffTable({showMessage}) {
         rowColumns.push(dateTimeColumn);
         let descriptionColumn = <td key={'description'}>{writeOff.description}</td>;
         rowColumns.push(descriptionColumn);
-        let orderColumn = <td key={'order'}>{`Заказ #${writeOff.order.id}`}</td>;
+        let orderColumn = <td key={'order'}>{writeOff.order ? `Заказ #${writeOff.order.id}` : '--'}</td>;
         rowColumns.push(orderColumn);
-        let paymentColumn = <td key={'payment'}> {writeOff.payment && writeOff.payment.amount}</td>;
+        let paymentColumn = <td key={'payment'}> {writeOff.payment ? writeOff.payment.amount : '0'}</td>;
         rowColumns.push(paymentColumn);
 
         return rowColumns;
@@ -272,42 +296,27 @@ function WriteOffTable({showMessage}) {
                 tableCardHeader={createTableCardHeader()}
                 elements={writeOffs}
                 createRowColumns={createRowColumns}/>
-            {/*<Table*/}
-            {/*    onChangeSearchField={onChangeSearchField}*/}
-            {/*    onChangeNumberOfRowsHandler={onChangeNumberOfRowsHandler}*/}
-            {/*    paginationOnClick={paginationOnClick}*/}
-            {/*    onSearchSubmit={onSearchSubmit}*/}
-            {/*    onClickSortIcon={onClickSortIcon}*/}
-            {/*    onClickEdit={onDblClick}*/}
-            {/*    headerFieldNamesMap={getHeaderFieldNamesMap()}*/}
-            {/*    isAsc={sort.isAsc}*/}
-            {/*    sortField={sort.sortField}*/}
-            {/*    searchMatches={searchMatches}*/}
-            {/*    amountOfElements={amountOfElements}*/}
-            {/*    totalPages={totalOfPages}*/}
-            {/*    currentPage={pageNumber}*/}
-            {/*    numberOfRows={numberOfRows}*/}
-            {/*    tableCardHeader={createTableCardHeader()}*/}
-            {/*    elements={writeOffs}*/}
-            {/*    createRowColumns={createRowColumns}/>*/}
-            {/*<EditClientWindow*/}
-            {/*    show={showEditClient}*/}
-            {/*    closeEditWindow={() => setShowEditClient(false)}*/}
-            {/*    onClientEdited={() => {getElements()}}*/}
-            {/*    editingClient={editingClient}*/}
-            {/*    showMessage={showMessage}/>*/}
-            {/*<AddWriteOffWindow*/}
-            {/*    show={showAddWriteOff}*/}
-            {/*    closeWindow={() => setShowAddWriteOff(false)}*/}
-            {/*    onWriteOffCreated={onWriteOffCreated}*/}
-            {/*    isIncomeWriteOff={isIncomeWriteOff}*/}
-            {/*    showMessage={showMessage}/>*/}
-            {/*<EditWriteOffWindow*/}
-            {/*    show={showEditWriteOff}*/}
-            {/*    onHide={closeEditWindow}*/}
-            {/*    closeEditWindow={closeEditWindow}*/}
-            {/*    onSubmitEdit={onSubmitEdit}*/}
-            {/*    editingWriteOff={editingWriteOff}/>*/}
+            <EditClientWindow
+                show={showEditClient}
+                closeEditWindow={() => setShowEditClient(false)}
+                onClientEdited={() => {
+                    getElements()
+                }}
+                editingClient={editingClient}
+                showMessage={showMessage}/>
+            <AddWriteOffWindow
+                show={showAddWriteOff}
+                closeWindow={closeAddWindow}
+                onWriteOffCreated={onWriteOffCreated}
+                showMessage={showMessage}/>
+            <EditWriteOffWindow
+                show={showEditWriteOff}
+                onWriteOffEdited={onWriteOffEdited}
+                onHide={closeEditWindow}
+                closeWindow={closeEditWindow}
+                onSubmitEdit={onSubmitEdit}
+                writeOffToEdit={writeOffToEdit}
+                showMessage={showMessage}/>
         </>
     );
 }

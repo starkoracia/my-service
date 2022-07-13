@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
-import axios from "axios";
+import axios from "./api/axios";
 import HystModal from "hystmodal";
 import {Route, Routes, useNavigate} from 'react-router-dom';
 import CreatePayment from "./CreatePayment";
@@ -53,7 +53,7 @@ function ClientTable({showMessage}) {
     }, [searchField])
 
     const getElements = () => {
-        axios.post('http://localhost:8080/clients',{
+        axios.post('/clients',{
                 numberOfElementsOnPage: numberOfRows,
                 pageNumber: pageNumber,
                 searchString: searchField,
@@ -70,7 +70,7 @@ function ClientTable({showMessage}) {
     }
 
     function editClient(client) {
-        axios.post('http://localhost:8080/clients/edit', client)
+        axios.post('/clients/edit', client)
             .then((response) => {
                 if(response.data === true) {
                     showMessage('Успешно сохранен', 'success')
@@ -86,7 +86,7 @@ function ClientTable({showMessage}) {
     }
 
     const getNumberOfSearchMatches = () => {
-        axios.post('http://localhost:8080/clients/matches', {
+        axios.post('/clients/matches', {
             searchString: searchField
         })
             .then((response) => {

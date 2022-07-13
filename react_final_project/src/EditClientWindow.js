@@ -1,7 +1,7 @@
 import {Button, Card, Container, Form, Modal} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import {Scrollbars} from "react-custom-scrollbars";
-import axios from "axios";
+import axios from "./api/axios";
 
 export default function EditClientWindow({show, closeEditWindow,
                                              editingClient, showMessage, onClientEdited}) {
@@ -34,7 +34,7 @@ export default function EditClientWindow({show, closeEditWindow,
     }
 
     function editClient(client) {
-        axios.post('http://localhost:8080/clients/edit', client)
+        axios.post('/clients/edit', client)
             .then((response) => {
                 if (response.data === true) {
                     showMessage('Успешно сохранен', 'success')

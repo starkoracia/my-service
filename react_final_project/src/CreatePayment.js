@@ -1,7 +1,7 @@
 import React, {Component, useEffect, useState} from 'react';
 import {Button, Card, Container, Form, FormText} from "react-bootstrap";
 import Select from "react-select";
-import axios from "axios";
+import axios from "./api/axios";
 
 function CreatePayment({customerToPayment, cancelCustomer}) {
 
@@ -135,7 +135,7 @@ function CreatePayment({customerToPayment, cancelCustomer}) {
     }
 
     function getAndSetCustomers() {
-        axios.get('http://localhost:8080/customers')
+        axios.get('/customers')
             .then((response) => {
                 console.log(response.data);
                 setCustomers(response.data);
@@ -146,7 +146,7 @@ function CreatePayment({customerToPayment, cancelCustomer}) {
     }
 
     const getCustomerAccounts = (customer) => {
-        axios.post('http://localhost:8080/customers/accounts', customer)
+        axios.post('/customers/accounts', customer)
             .then((response) => {
                 const accountsFromCustomer = response.data;
                 customer.accounts = accountsFromCustomer;
@@ -158,7 +158,7 @@ function CreatePayment({customerToPayment, cancelCustomer}) {
     }
 
     const getAndSetCategories = () => {
-        axios.get('http://localhost:8080/categories')
+        axios.get('/categories')
             .then((response) => {
                 const categories = response.data;
                 setCategories(categories);
@@ -169,7 +169,7 @@ function CreatePayment({customerToPayment, cancelCustomer}) {
     }
 
     function addNewTransaction(transaction) {
-        axios.post('http://localhost:8080/transactions/create', transaction)
+        axios.post('/transactions/create', transaction)
             .then((response) => {
 
             })
@@ -179,7 +179,7 @@ function CreatePayment({customerToPayment, cancelCustomer}) {
     }
 
     function getCsvFromAccount(account) {
-        axios.post('http://localhost:8080/transactions/csv', account)
+        axios.post('/transactions/csv', account)
             .then((response) => {
                 const stringCsv = response.data;
                 console.log(stringCsv);

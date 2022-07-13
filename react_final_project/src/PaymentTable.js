@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
-import axios from "axios";
+import axios from "./api/axios";
 import {Card, Container} from "react-bootstrap";
 import EditClientWindow from "./EditClientWindow";
 import AddPaymentWindow from "./AddPaymentWindow";
@@ -56,7 +56,7 @@ function PaymentTable({showMessage}) {
     }, [searchField])
 
     function getElements() {
-        axios.post('http://localhost:8080/payments',{
+        axios.post('/payments',{
                 numberOfElementsOnPage: numberOfRows,
                 pageNumber: pageNumber,
                 searchString: searchField,
@@ -64,7 +64,6 @@ function PaymentTable({showMessage}) {
                 sortBy: sort.sortField
             })
             .then((response) => {
-                console.log(response.data);
                 getBalance();
                 setPayments(response.data.dtoEntities);
                 setAmountOfElements(response.data.amountOfElements);
@@ -75,7 +74,7 @@ function PaymentTable({showMessage}) {
     }
 
     function getBalance() {
-        axios.get('http://localhost:8080/payments/balance')
+        axios.get('/payments/balance')
             .then((response) => {
                 setBalance(response.data)
             })
@@ -85,7 +84,7 @@ function PaymentTable({showMessage}) {
     }
 
     function editPayment(client) {
-        axios.post('http://localhost:8080/payments/edit', client)
+        axios.post('/payments/edit', client)
             .then((response) => {
                 if (response.data === true) {
                     showMessage('Успешно сохранен', 'success')
@@ -101,7 +100,7 @@ function PaymentTable({showMessage}) {
     }
 
     const getNumberOfSearchMatches = () => {
-        axios.post('http://localhost:8080/payments/matches', {
+        axios.post('/payments/matches', {
             searchString: searchField
         })
             .then((response) => {

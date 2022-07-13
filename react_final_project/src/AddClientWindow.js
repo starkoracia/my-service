@@ -2,7 +2,7 @@ import {Button, Card, Container, Form, Modal} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import {Scrollbars} from "react-custom-scrollbars";
 import $ from "jquery";
-import axios from "axios";
+import axios from "./api/axios";
 
 export default function AddClientWindow({
                                             show, isSupplier, closeAddWindow,
@@ -43,7 +43,7 @@ export default function AddClientWindow({
     }
 
     function createClient(client) {
-        axios.post('http://localhost:8080/clients/create', client)
+        axios.post('/clients/create', client)
             .then((response) => {
                 if (response.data === true) {
                     showMessage('Успешно создан', 'success')

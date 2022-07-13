@@ -2,14 +2,14 @@ import React, {useEffect, useState} from 'react';
 import Select from "react-select";
 import {Button} from "react-bootstrap";
 import AddProductWindow from "./AddProductWindow";
-import axios from "axios";
+import axios from "./api/axios";
 import configData from "./configData.js";
 
 function RelocatableProductSelect({
                                       show, productSelectValue, setProductSelectValue,
-                                      selectedProducts, showMessage,
+                                      selectedProducts, showMessage, disabled, isWriteOff
                                   }) {
-
+    const [products, setProducts] = useState([]);
     const [showAddProduct, setShowAddProduct] = useState(false);
     const [productOptions, setProductOptions] = useState([{label: '...', value: null}]);
 
@@ -20,8 +20,8 @@ function RelocatableProductSelect({
     }, [show])
 
     useEffect(() => {
-        initData();
-    }, [selectedProducts])
+        createAndSetProductOptions();
+    }, [selectedProducts, products])
 
     function initData() {
         getProducts();
@@ -38,7 +38,8 @@ function RelocatableProductSelect({
     function getProducts() {
         axios.get(`${configData.SERVER_URL}/products`)
             .then((response) => {
-                createAndSetProductOptions(response.data);
+                const products = response.data;
+                setProducts(products);
             })
             .catch(function (error) {
                 console.log(error);
@@ -46,7 +47,7 @@ function RelocatableProductSelect({
     }
 
     function getLastCreatedProduct() {
-        axios.get('http://localhost:8080/products/last')
+        axios.get('/products/last')
             .then((response) => {
                 const product = response.data;
                 const label = `#${product.id} ${product.name}`;
@@ -63,17 +64,22 @@ function RelocatableProductSelect({
         setShowAddProduct(true);
     }
 
-    function createAndSetProductOptions(products) {
-        const filteredProducts = products.filter(product => {
-            let result = true;
-            selectedProducts.forEach(relocatableProduct => {
-                if(relocatableProduct.productMaterial.id === product.id) {
-                    result = false;
-                }
-            });
-            return result;
-            // !selectedProducts.includes(product)
-        });
+    function createAndSetProductOptions() {
+        const filteredProducts =
+            products
+                .filter(product => {
+                    let result = true;
+                    selectedProducts.forEach(relocatableProduct => {
+                        if (relocatableProduct.productMaterial.id === product.id) {
+                            result = false;
+                        }
+                    });
+                    if (isWriteOff && !product.inStock) {
+                        result = false;
+                    }
+                    return result;
+                });
+
         const options = convertProductsToOptions(filteredProducts);
         setProductOptions(options);
         setProductSelectValue(options[0] ? options[0] : null);
@@ -82,7 +88,7 @@ function RelocatableProductSelect({
     function convertProductsToOptions(products) {
         const options = [];
         products.forEach((product) => {
-            const label = `#${product.id} ${product.name}`;
+            const label = `#${product.id} ${product.name} ${isWriteOff ? `(${product.numberOf} шт)` : ''}`;
             options.push({
                 label: label,
                 value: product
@@ -93,6 +99,7 @@ function RelocatableProductSelect({
 
     return (
         <>
+            <h6>Товар</h6>
             <div className={'select-div'}>
                 <Select
                     className={'select relocatable-product'}
@@ -100,12 +107,15 @@ function RelocatableProductSelect({
                     value={productSelectValue}
                     onChange={setProductSelectValue}
                     isClearable={true}
+                    isDisabled={disabled}
                 />
-                <Button className={'select-button'}
-                        variant={"info"}
-                        onClick={onClickAddProduct}>
-                    Новый товар +
-                </Button>
+                {!isWriteOff &&
+                    <Button className={'select-button'}
+                            variant={"info"}
+                            onClick={onClickAddProduct}
+                            disabled={disabled}>
+                        Новый товар +
+                    </Button>}
             </div>
             <AddProductWindow
                 show={showAddProduct}

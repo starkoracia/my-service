@@ -1,7 +1,7 @@
 import {Button, Card, Container, Form, Modal} from "react-bootstrap";
 import React, {useEffect, useRef, useState} from "react";
 import {Scrollbars} from "react-custom-scrollbars";
-import axios from "axios";
+import axios from "./api/axios";
 import Select from "react-select";
 import $ from "jquery";
 import ClientSelect from "./ClientSelect";
@@ -10,7 +10,7 @@ import EmployeeSelect from "./EmployeeSelect";
 
 export default function AddPaymentWindow({
                                              show, closeWindow, isIncomePayment,
-                                             showMessage, onPaymentCreated
+                                             showMessage, onPaymentCreated, paymentData
                                          }) {
     const [amountValue, setAmountValue] = useState('');
     const [commentValue, setCommentValue] = useState('');
@@ -32,7 +32,14 @@ export default function AddPaymentWindow({
         } else {
             setCommentValue('Расход денег');
         }
-        $('.input-text.input-cash').focus();
+        if (paymentData) {
+            setAmountValue(paymentData.amountValue);
+            setCashierSelectValue(paymentData.employeeSelectValue);
+            setClientSelectValue(paymentData.clientSelectValue);
+            setCommentValue(paymentData.commentValue);
+        } else {
+            $('.input-text.input-cash').focus();
+        }
     }
 
     function onSubmit() {
@@ -51,7 +58,11 @@ export default function AddPaymentWindow({
             paymentItem: paymentItemSelectValue.value
         }
         console.log(payment);
-        createPayment(payment);
+        if(paymentData) {
+            onPaymentCreated(payment)
+        } else {
+            createPayment(payment);
+        }
         clearForm()
     }
 
@@ -65,7 +76,7 @@ export default function AddPaymentWindow({
     }
 
     function createPayment(payment) {
-        axios.post('http://localhost:8080/payments/create', payment)
+        axios.post('/payments/create', payment)
             .then((response) => {
                 if (response.data === true) {
                     showMessage('Успешно создан', 'success')
@@ -119,6 +130,10 @@ export default function AddPaymentWindow({
         }
     }
 
+    function onFocusSelect(event) {
+        event.target.select()
+    }
+
     function onHide() {
         closeWindow();
         clearForm();
@@ -154,6 +169,7 @@ export default function AddPaymentWindow({
                                                 setClientSelectValue={setClientSelectValue}
                                                 showMessage={showMessage}
                                                 show={show}
+                                                disabled={!!paymentData}
                                             />
                                         </Form.Group>
                                         <Form.Group className={" add-form-group"}>
@@ -164,6 +180,8 @@ export default function AddPaymentWindow({
                                                           min="0.00" max="999999999999" step="0.01"
                                                           value={amountValue}
                                                           onChange={(e) => setAmountValue(e.target.value)}
+                                                          onFocus={onFocusSelect}
+                                                          disabled={!!paymentData}
                                             />
                                             {amountInvalidMessage()}
                                         </Form.Group>
@@ -199,7 +217,8 @@ export default function AddPaymentWindow({
                                                 isSeller={true}
                                                 showMessage={showMessage}
                                                 employeeSelectValue={cashierSelectValue}
-                                                setEmployeeSelectValue={setCashierSelectValue} />
+                                                setEmployeeSelectValue={setCashierSelectValue}
+                                                disabled={!!paymentData}/>
                                         </Form.Group>
                                     </Form>
                                 </Card.Body>

@@ -1,7 +1,7 @@
 import {Button, Card, Container, Form, Modal} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import {Scrollbars} from "react-custom-scrollbars";
-import axios from "axios";
+import axios from "./api/axios";
 import $ from "jquery";
 
 export default function AddPaymentItemWindow({show, closeAddWindow, showMessage, onItemCreated,
@@ -32,7 +32,7 @@ export default function AddPaymentItemWindow({show, closeAddWindow, showMessage,
     }
 
     function createItem(item) {
-        axios.post('http://localhost:8080/payments/items/create', item)
+        axios.post('/payments/items/create', item)
             .then((response) => {
                 if (response.data === true) {
                     showMessage('Успешно создан', 'success')

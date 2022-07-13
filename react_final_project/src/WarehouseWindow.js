@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Card, Container, Tab, Tabs} from "react-bootstrap";
 import ProductTable from "./ProductTable";
 import PostingTable from "./PostingTable";
@@ -7,9 +7,27 @@ import WriteOffTable from "./WriteOffTable";
 function WarehouseWindow({showMessage}) {
     const [tabKey, setTabKey] = useState('products');
     const [showAddPosting, setShowAddPosting] = useState(false);
+    const [showAddWriteOff, setShowAddWriteOff] = useState(false);
+    const [productTableUpdate, setProductTableUpdate] = useState(false);
+
+    useEffect(() => {
+        if (!showAddPosting) {
+            setProductTableUpdate(true);
+        }
+    }, [showAddPosting])
+
+    useEffect(() => {
+        if (!showAddWriteOff) {
+            setProductTableUpdate(true);
+        }
+    }, [showAddWriteOff])
 
     function onAddNewPostingButtonClicked() {
         setShowAddPosting(true);
+    }
+
+    function onAddNewWriteOffButtonClicked() {
+        setShowAddWriteOff(true);
     }
 
     return (
@@ -27,8 +45,7 @@ function WarehouseWindow({showMessage}) {
                             </button>
                             <button className={'minus-button'}
                                     onClick={() => {
-                                        // setIsIncomeProduct(false);
-                                        // setShowAddProduct(true);
+                                        onAddNewWriteOffButtonClicked();
                                     }}>
                                 <img src={'/images/minus.svg'} className={'plus-svg'}/> Списание
                             </button>
@@ -42,7 +59,9 @@ function WarehouseWindow({showMessage}) {
                             className={'warehouse-tabs'}
                         >
                             <Tab eventKey="products" title="Товары" className={'warehouse-tab'}>
-                                <ProductTable re showMessage={showMessage}/>
+                                <ProductTable showMessage={showMessage}
+                                              productTableUpdate={productTableUpdate}
+                                              setProductTableUpdate={setProductTableUpdate}/>
                             </Tab>
                             <Tab eventKey="posting" title="Оприходования">
                                 <PostingTable showMessage={showMessage}
@@ -50,7 +69,9 @@ function WarehouseWindow({showMessage}) {
                                               setShowAddPosting={setShowAddPosting}/>
                             </Tab>
                             <Tab eventKey="write-off" title="Списания">
-                                <WriteOffTable showMessage={showMessage}/>
+                                <WriteOffTable showMessage={showMessage}
+                                               showAddWriteOff={showAddWriteOff}
+                                               setShowAddWriteOff={setShowAddWriteOff}/>
                             </Tab>
                         </Tabs>
                     </Card.Body>

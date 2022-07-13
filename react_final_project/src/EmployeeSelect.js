@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import Select from "react-select";
 import {Button} from "react-bootstrap";
-import axios from "axios";
+import axios from "./api/axios";
 
-function EmployeeSelect({show, employeeSelectValue, setEmployeeSelectValue, showMessage, isSeller}) {
+function EmployeeSelect({show, employeeSelectValue, setEmployeeSelectValue,
+                            showMessage, isSeller, disabled}) {
 
     const [itemOptions, setItemOptions] = useState([{label: '...', value: null}]);
 
@@ -30,7 +31,7 @@ function EmployeeSelect({show, employeeSelectValue, setEmployeeSelectValue, show
     }
 
     function getItems() {
-        axios.get('http://localhost:8080/employees')
+        axios.get('/employees')
             .then((response) => {
                 createAndSetItemOptions(response.data);
             })
@@ -60,6 +61,7 @@ function EmployeeSelect({show, employeeSelectValue, setEmployeeSelectValue, show
                     options={itemOptions}
                     value={employeeSelectValue}
                     onChange={setEmployeeSelectValue}
+                    isDisabled={disabled}
                 />
             </div>
         </>

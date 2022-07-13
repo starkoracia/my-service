@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Select from "react-select";
 import {Button} from "react-bootstrap";
-import axios from "axios";
+import axios from "./api/axios";
 import AddPaymentItemWindow from "./AddPaymentItemWindow";
 
 function PaymentItemSelect({show, itemSelectValue, setItemSelectValue,
@@ -29,7 +29,7 @@ function PaymentItemSelect({show, itemSelectValue, setItemSelectValue,
     }
 
     function getLastCreatedClient() {
-        axios.get('http://localhost:8080/payments/items/last')
+        axios.get('/payments/items/last')
             .then((response) => {
                 const item = response.data;
                 const label = `${item.name}`
@@ -55,7 +55,7 @@ function PaymentItemSelect({show, itemSelectValue, setItemSelectValue,
     }
 
     function getItems() {
-        axios.get('http://localhost:8080/payments/items')
+        axios.get('/payments/items')
             .then((response) => {
                 createAndSetItemOptions(response.data);
             })

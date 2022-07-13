@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
-import axios from "axios";
+import axios from "./api/axios";
 import {Button, Card, Container, Tab, Tabs} from "react-bootstrap";
 import AddProductWindow from "./AddProductWindow";
 import EditProductWindow from "./EditProductWindow";
 
 
-function ProductTable({showMessage}) {
+function ProductTable({showMessage, productTableUpdate, setProductTableUpdate}) {
     const [numberOfRows, setNumberOfRows] = useState(10);
     const [pageNumber, setPageNumber] = useState(1);
     const [amountOfElements, setAmountOfElements] = useState(0);
@@ -37,8 +37,11 @@ function ProductTable({showMessage}) {
     }, [amountOfElements, products])
 
     useEffect(() => {
+        if(productTableUpdate) {
+            setProductTableUpdate(false);
+        }
         getElements();
-    }, [numberOfRows, pageNumber, sort])
+    }, [numberOfRows, pageNumber, sort, productTableUpdate])
 
     useEffect(() => {
         if (!firstTimeRender.current) {
@@ -54,7 +57,7 @@ function ProductTable({showMessage}) {
     }, [searchField])
 
     function getElements() {
-        axios.post('http://localhost:8080/products', {
+        axios.post('/products', {
             numberOfElementsOnPage: numberOfRows,
             pageNumber: pageNumber,
             searchString: searchField,
@@ -62,7 +65,6 @@ function ProductTable({showMessage}) {
             sortBy: sort.sortField
         })
             .then((response) => {
-                console.log(response.data);
                 setProducts(response.data.dtoEntities);
                 setAmountOfElements(response.data.amountOfElements);
             })
@@ -72,7 +74,7 @@ function ProductTable({showMessage}) {
     }
 
     const getNumberOfSearchMatches = () => {
-        axios.post('http://localhost:8080/products/matches', {
+        axios.post('/products/matches', {
             searchString: searchField
         })
             .then((response) => {

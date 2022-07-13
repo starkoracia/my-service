@@ -1,7 +1,7 @@
 import {Button, Card, Container, Form, Modal} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import {Scrollbars} from "react-custom-scrollbars";
-import axios from "axios";
+import axios from "./api/axios";
 import $ from "jquery";
 
 export default function AddProductCategoryWindow({show, closeAddWindow, showMessage, onItemCreated}) {
@@ -28,7 +28,7 @@ export default function AddProductCategoryWindow({show, closeAddWindow, showMess
     }
 
     function createItem(item) {
-        axios.post('http://localhost:8080/products/categories/create', item)
+        axios.post('/products/categories/create', item)
             .then((response) => {
                 if (response.data === true) {
                     onItemCreated();

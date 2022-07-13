@@ -2,10 +2,12 @@ import React, {useEffect, useState} from 'react';
 import Select from "react-select";
 import {Button} from "react-bootstrap";
 import AddClientWindow from "./AddClientWindow";
-import axios from "axios";
+import axios from "./api/axios";
 
-function ClientSelect({show, clientSelectValue, setClientSelectValue, showMessage,
-                          isSupplier}) {
+function ClientSelect({
+                          show, clientSelectValue, setClientSelectValue, showMessage,
+                          isSupplier, disabled
+                      }) {
 
     const [showAddClient, setShowAddClient] = useState(false);
     const [clientOptions, setClientOptions] = useState([{label: '...', value: null}]);
@@ -29,7 +31,7 @@ function ClientSelect({show, clientSelectValue, setClientSelectValue, showMessag
     }
 
     function getLastCreatedClient() {
-        axios.get('http://localhost:8080/clients/last')
+        axios.get('/clients/last')
             .then((response) => {
                 const client = response.data;
                 const label = `${client.name}  ${client.mobile}`
@@ -52,7 +54,7 @@ function ClientSelect({show, clientSelectValue, setClientSelectValue, showMessag
     }
 
     function getClients() {
-        axios.get('http://localhost:8080/clients')
+        axios.get('/clients')
             .then((response) => {
                 createAndSetClientOptions(response.data);
             })
@@ -70,7 +72,7 @@ function ClientSelect({show, clientSelectValue, setClientSelectValue, showMessag
                 value: client
             })
         });
-        if(isSupplier) {
+        if (isSupplier) {
             return options.filter(option => option.value.isSupplier);
         }
         return options;
@@ -85,10 +87,12 @@ function ClientSelect({show, clientSelectValue, setClientSelectValue, showMessag
                     value={clientSelectValue}
                     onChange={setClientSelectValue}
                     isClearable={true}
+                    isDisabled={disabled}
                 />
                 <Button className={'select-button'}
                         variant={"info"}
-                        onClick={onClickAddClient}>
+                        onClick={onClickAddClient}
+                        disabled={disabled} >
                     +
                 </Button>
             </div>

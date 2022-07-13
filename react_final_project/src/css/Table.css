@@ -211,6 +211,14 @@ th.table-header-column {
     height: 100%;
 }
 
+.table-wrap.auto-width {
+    min-width: auto;
+}
+
+.table-card.auto-height {
+    height: auto;
+}
+
 .tab-content .table-card-body {
     height: 100%;
 }
@@ -255,12 +263,22 @@ th.table-header-column {
     padding-top: 20px;
 }
 
+.table-card-header.relocatable-product {
+    display: flex;
+    padding-top: 20px;
+    flex-direction: column;
+}
+
 .select-div {
     display: flex;
 }
 
 .select {
     width: 570px;
+}
+
+.select.relocatable-product {
+    width: 400px;
 }
 
 .select-button {

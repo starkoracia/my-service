@@ -6,32 +6,29 @@ import $ from "jquery";
 import ClientSelect from "./ClientSelect";
 import EmployeeSelect from "./EmployeeSelect";
 import RelocatableProductsTable from "./RelocatableProductsTable";
-import AddPaymentWindow from "./AddPaymentWindow";
 
-export default function AddPostingWindow({
-                                             show, closeWindow, showMessage,
-                                             onPostingCreated
-                                         }) {
+export default function EditWriteOffWindow({
+                                               show, closeWindow, showMessage,
+                                               onWriteOffEdited, writeOffToEdit
+                                           }) {
     const [descriptionValue, setDescriptionValue] = useState('');
     const [clientSelectValue, setClientSelectValue] = useState({});
     const [employeeSelectValue, setEmployeeSelectValue] = useState({});
     const [relocatableProducts, setRelocatableProducts] = useState([]);
     const [productSelectValue, setProductSelectValue] = useState({});
-    const [postingAmountValue, setPostingAmountValue] = useState('0');
-
-    const [showAddPayment, setShowAddPayment] = useState(false);
+    const [writeOffAmountValue, setWriteOffAmountValue] = useState('0');
 
     const style = {
-        postingAmountDiv: {
+        amountDiv: {
             display: 'flex',
             marginLeft: '10px'
         },
-        postingAmountH4: {
+        amountH4: {
             paddingTop: '22px',
             marginLeft: 'auto'
         },
-        postingAmountCashCardDiv: {borderWidth: '4px'},
-        postingAmountCashCardContainer: {
+        amountCashCardDiv: {borderWidth: '4px'},
+        amountCashCardContainer: {
             width: '150px',
             borderWidth: '4px'
         }
@@ -44,109 +41,70 @@ export default function AddPostingWindow({
     }, [show])
 
     useEffect(() => {
-        calculatePostingAmount();
-    },[relocatableProducts])
+        calculateWriteOffAmount();
+    }, [relocatableProducts])
 
     function initData() {
-        clearForm();
-        $('.input-text.focus').focus();
+        setWriteOffToEditFields();
     }
 
-    function calculatePostingAmount() {
+    function setWriteOffToEditFields() {
+        setDescriptionValue(writeOffToEdit.description);
+        setClientSelectValue(
+            writeOffToEdit.client
+                ? {
+                    label: `${writeOffToEdit.client.name}  ${writeOffToEdit.client.mobile}`,
+                    value: writeOffToEdit.client
+                }
+                : null);
+        setRelocatableProducts(writeOffToEdit.relocatableProducts);
+        setEmployeeSelectValue({
+            label: `${writeOffToEdit.employee.name}`,
+            value: writeOffToEdit.employee
+        })
+    }
+
+    function calculateWriteOffAmount() {
         let amount = 0;
         relocatableProducts.forEach((relocatableProduct) => {
             amount += Number(relocatableProduct.numberOf) * Number(relocatableProduct.price)
         })
-        setPostingAmountValue(amount.toString());
-    }
-
-    function clearForm() {
-        setDescriptionValue('');
-        setClientSelectValue({});
-        setRelocatableProducts([]);
-        setProductSelectValue(null);
-        setPostingAmountValue('0');
+        setWriteOffAmountValue(amount.toString());
     }
 
     function onSubmit() {
-        const posting = createPostingFromFields();
-        console.log(posting);
-        setShowAddPayment(true);
+        writeOffToEdit.description = descriptionValue;
+        writeOffToEdit.employee = employeeSelectValue.value;
+        editWriteOff(writeOffToEdit);
+        // clearForm()
     }
 
-    function onPaymentCreated(payment) {
-        createPosting(createPostingFromFields(payment));
-        setShowAddPayment(false);
-        closeWindow();
+    function clearForm() {
+
     }
 
-    function createPostingFromFields(payment) {
-        const posting = {
-            supplier: clientSelectValue.value,
-            description: descriptionValue,
-            employee: employeeSelectValue.value,
-            relocatableProducts: relocatableProducts,
-            payment: payment
-        }
-        return posting;
-    }
-
-    function createPaymentDataForNewPayment() {
-        const paymentData = {
-            amountValue: postingAmountValue,
-            employeeSelectValue: employeeSelectValue,
-            clientSelectValue: clientSelectValue,
-            commentValue: 'Оплата оприходования'
-        }
-        return paymentData;
-    }
-
-    function createPosting(posting) {
-        axios.post('/postings/create', posting)
+    function editWriteOff(writeOff) {
+        axios.post('/write_offs/edit', writeOff)
             .then((response) => {
                 if (response.data === true) {
-                    showMessage('Успешно создан', 'success')
-                    onPostingCreated();
+                    showMessage('Успешно изменен', 'success')
+                    onWriteOffEdited();
                 } else {
-                    showMessage('Ошибка создания', 'danger')
+                    showMessage('Ошибка изменения', 'danger')
                 }
             })
-            .catch(function (error) {
-                showMessage('Ошибка создания', 'danger')
+            .catch((error) => {
+                showMessage('Ошибка изменения', 'danger')
                 console.log(error);
             })
     }
 
     function isFormNotValid() {
-        return isSupplierNotValid() || isNumberOfProductsNotValid();
-    }
-
-    function isSupplierNotValid() {
-        return clientSelectValue == null || !clientSelectValue.value;
+        return isNumberOfProductsNotValid();
     }
 
     function isNumberOfProductsNotValid() {
         return relocatableProducts.length < 1;
-    }
-
-    function numberOfProductsInvalidMessage() {
-        if (isNumberOfProductsNotValid()) {
-            return (
-                <Form.Text className={'invalid-message'}>
-                    Добавьте перемещаемые товары!
-                </Form.Text>
-            )
-        }
-    }
-
-    function supplierInvalidMessage() {
-        if (isSupplierNotValid()) {
-            return (
-                <Form.Text className={'invalid-message'}>
-                    Укажите поставщика!
-                </Form.Text>
-            )
-        }
     }
 
     function onHide() {
@@ -165,7 +123,7 @@ export default function AddPostingWindow({
             >
                 <Modal.Header closeButton>
                     <Modal.Title>
-                        {'Новое оприходование'}
+                        {'Изменение списания'}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className={"add-modal-body"}>
@@ -177,7 +135,7 @@ export default function AddPostingWindow({
                                         <h5 className={'form-group-tag'}>Общая информация</h5>
                                         <Form.Group className={"add-form-group"}>
                                             <Form.Label className={'form-group-label'}>
-                                                Поставщик
+                                                Клиент
                                             </Form.Label>
                                             <ClientSelect
                                                 clientSelectValue={clientSelectValue}
@@ -185,8 +143,8 @@ export default function AddPostingWindow({
                                                 showMessage={showMessage}
                                                 show={show}
                                                 isSupplier={true}
+                                                disabled={true}
                                             />
-                                            {supplierInvalidMessage()}
                                         </Form.Group>
                                         <hr/>
                                         <Form.Group className={"add-form-group"}>
@@ -206,8 +164,8 @@ export default function AddPostingWindow({
                                             setSelectedProducts={setRelocatableProducts}
                                             productSelectValue={productSelectValue}
                                             setProductSelectValue={setProductSelectValue}
+                                            disabled={true}
                                         />
-                                        {numberOfProductsInvalidMessage()}
                                         <hr/>
                                         <Form.Group className={"add-form-group"}>
                                             <Form.Label className={'form-group-label'}>
@@ -220,13 +178,13 @@ export default function AddPostingWindow({
                                                 setEmployeeSelectValue={setEmployeeSelectValue}/>
                                         </Form.Group>
                                         <hr/>
-                                        <div style={style.postingAmountDiv}>
-                                            <h4 style={style.postingAmountH4}>К оплате :</h4>
-                                            <Card className={'amount-cash-card'} style={style.postingAmountCashCardDiv}>
+                                        <div style={style.amountDiv}>
+                                            <h4 style={style.amountH4}>К оплате :</h4>
+                                            <Card className={'amount-cash-card'} style={style.amountCashCardDiv}>
                                                 <Card.Body>
                                                     <Container className={'amount-cash-container'}
-                                                               style={style.postingAmountCashCardContainer}>
-                                                        <h3><b><i>{postingAmountValue} $</i></b></h3>
+                                                               style={style.amountCashCardContainer}>
+                                                        <h3><b><i>{writeOffAmountValue} $</i></b></h3>
                                                     </Container>
                                                 </Card.Body>
                                             </Card>
@@ -240,7 +198,7 @@ export default function AddPostingWindow({
                                     <Button className={"add-form-button"} variant={"secondary"} type={"button"}
                                             disabled={isFormNotValid()}
                                             onClick={onSubmit}>
-                                        Добавить
+                                        Изменить
                                     </Button>
                                     <Button className={"cancel-form-button"} variant={"warning"} type={"button"}
                                             onClick={closeWindow}>
@@ -252,13 +210,6 @@ export default function AddPostingWindow({
                     </Container>
                 </Modal.Body>
             </Modal>
-            <AddPaymentWindow
-                paymentData={createPaymentDataForNewPayment()}
-                show={showAddPayment}
-                closeWindow={() => setShowAddPayment(false)}
-                onPaymentCreated={onPaymentCreated}
-                isIncomePayment={false}
-                showMessage={showMessage} />
         </>
     );
 }

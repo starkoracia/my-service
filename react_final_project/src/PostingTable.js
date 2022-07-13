@@ -1,7 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
-import axios from "axios";
+import axios from "./api/axios";
 import AddPostingWindow from "./AddPostingWindow";
+import EditClientWindow from "./EditClientWindow";
+import EditPostingWindow from "./EditPostingWindow";
 
 
 function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
@@ -12,7 +14,7 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
     const [searchField, setSearchField] = useState('');
     const [searchMatches, setSearchMatches] = useState(0);
     const [sort, setSort] = useState({sortField: 'id', isAsc: true});
-    const [editingPosting, setEditingPosting] = useState({
+    const [postingToEdit, setPostingToEdit] = useState({
         id: 0,
     });
     const [editingClient, setEditingClient] = useState({
@@ -30,10 +32,13 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
     const firstTimeRender = useRef(true);
 
     useEffect(() => {
-        if(showAddPosting) {
+        if (showAddPosting) {
             initData();
         }
-    },[showAddPosting])
+        if (showAddPosting == false) {
+            getElements();
+        }
+    }, [showAddPosting])
 
     useEffect(() => {
         countAndSetTheTotalOfPages();
@@ -57,11 +62,11 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
     }, [searchField])
 
     function initData() {
-        console.log('onAddNewPostingButtonClicked');
+
     }
 
     function getElements() {
-        axios.get('http://localhost:8080/postings')
+        axios.get('/postings')
             //     numberOfElementsOnPage: numberOfRows,
             //     pageNumber: pageNumber,
             //     searchString: searchField,
@@ -69,7 +74,6 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
             //     sortBy: sort.sortField
             // })
             .then((response) => {
-                console.log(response.data);
                 setPostings(response.data);
                 // setAmountOfElements(response.data.amountOfElements);
             })
@@ -78,8 +82,8 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
             })
     }
 
-    function editPosting(client) {
-        axios.post('http://localhost:8080/postings/edit', client)
+    function editPosting(posting) {
+        axios.post('/postings/edit', posting)
             .then((response) => {
                 if (response.data === true) {
                     showMessage('Успешно сохранен', 'success')
@@ -95,7 +99,7 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
     }
 
     const getNumberOfSearchMatches = () => {
-        axios.post('http://localhost:8080/postings/matches', {
+        axios.post('/postings/matches', {
             searchString: searchField
         })
             .then((response) => {
@@ -164,14 +168,27 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
         setSort({sortField: sortName, isAsc: isAscNew});
     }
 
-    const onDblClick = (client) => {
-        setEditingPosting(client);
-        setShowEditPosting(true);
+    function onDblClick(posting) {
+        setRelocatableProductsToPosting(posting, (posting) => {
+            setPostingToEdit(posting);
+            setShowEditPosting(true);
+        });
     }
 
-    function onPostingClick(e, client) {
-        onDblClick(client);
-        e.preventDefault();
+    function onPostingEdited() {
+        setShowEditPosting(false);
+        getElements();
+    }
+
+    function setRelocatableProductsToPosting(posting, callback) {
+        axios.post('/postings/relocatable_products', posting)
+            .then(response => {
+                posting.relocatableProducts = response.data;
+                callback(posting);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     function closeAddWindow() {
@@ -186,8 +203,8 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
         getElements();
     }
 
-    function onSubmitEdit(client) {
-        editPosting(client);
+    function onSubmitEdit(posting) {
+        editPosting(posting);
         closeEditWindow();
     }
 
@@ -210,7 +227,7 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
         const headerFieldArray = [
             {headerName: 'Id', fieldName: 'id'},
             {headerName: 'Поставщик', fieldName: 'supplier'},
-            {headerName: 'Время', fieldName: 'dateTime'},
+            {headerName: 'Ответственный/Время', fieldName: 'dateTime'},
             {headerName: 'Описание', fieldName: 'description'},
             {headerName: 'Сумма', fieldName: 'payment'},
         ]
@@ -227,12 +244,12 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
 
         let idColumn = <td key={'id'}> {posting.id}</td>;
         rowColumns.push(idColumn);
-        let supplierColumn = <td key={'supplier'}/>;
-        if(posting.supplier) {
+        let supplierColumn = <td key={'supplier'} style={{whiteSpace: 'pre'}}/>;
+        if (posting.supplier) {
             const supplier = posting.supplier;
             const supplierSvg = supplier.isSupplier &&
                 <img src={'/images/supplier.svg'} className={'supplier-svg'}/>
-            supplierColumn = <td key={'supplier'}>
+            supplierColumn = <td key={'supplier'} style={{whiteSpace: 'pre'}}>
                 <a href={'#'}
                    onClick={(e) => onClientClick(e, supplier)}>
                     {supplier.name}
@@ -240,7 +257,7 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
                 {supplierSvg}</td>;
         }
         rowColumns.push(supplierColumn);
-        let dateTimeColumn = <td key={'dateTime'}>
+        let dateTimeColumn = <td key={'dateTime'} style={{whiteSpace: 'pre'}}>
             <div className={'two-line-div'}>
                 <span>{posting.employee.name}</span>
                 <span>{`${date.toLocaleDateString()} ${date.toLocaleTimeString()}`}</span>
@@ -275,41 +292,25 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
                 tableCardHeader={createTableCardHeader()}
                 elements={postings}
                 createRowColumns={createRowColumns}/>
-            {/*<Table*/}
-            {/*    onChangeSearchField={onChangeSearchField}*/}
-            {/*    onChangeNumberOfRowsHandler={onChangeNumberOfRowsHandler}*/}
-            {/*    paginationOnClick={paginationOnClick}*/}
-            {/*    onSearchSubmit={onSearchSubmit}*/}
-            {/*    onClickSortIcon={onClickSortIcon}*/}
-            {/*    onClickEdit={onDblClick}*/}
-            {/*    headerFieldNamesMap={getHeaderFieldNamesMap()}*/}
-            {/*    isAsc={sort.isAsc}*/}
-            {/*    sortField={sort.sortField}*/}
-            {/*    searchMatches={searchMatches}*/}
-            {/*    amountOfElements={amountOfElements}*/}
-            {/*    totalPages={totalOfPages}*/}
-            {/*    currentPage={pageNumber}*/}
-            {/*    numberOfRows={numberOfRows}*/}
-            {/*    tableCardHeader={createTableCardHeader()}*/}
-            {/*    elements={postings}*/}
-            {/*    createRowColumns={createRowColumns}/>*/}
-            {/*<EditClientWindow*/}
-            {/*    show={showEditClient}*/}
-            {/*    closeEditWindow={() => setShowEditClient(false)}*/}
-            {/*    onClientEdited={() => {getElements()}}*/}
-            {/*    editingClient={editingClient}*/}
-            {/*    showMessage={showMessage}/>*/}
+            <EditClientWindow
+                show={showEditClient}
+                closeEditWindow={() => setShowEditClient(false)}
+                onClientEdited={() => getElements()}
+                editingClient={editingClient}
+                showMessage={showMessage}/>
             <AddPostingWindow
                 show={showAddPosting}
-                closeWindow={() => setShowAddPosting(false)}
+                closeWindow={closeAddWindow}
                 onPostingCreated={onPostingCreated}
-                showMessage={showMessage} />
-            {/*<EditPostingWindow*/}
-            {/*    show={showEditPosting}*/}
-            {/*    onHide={closeEditWindow}*/}
-            {/*    closeEditWindow={closeEditWindow}*/}
-            {/*    onSubmitEdit={onSubmitEdit}*/}
-            {/*    editingPosting={editingPosting}/>*/}
+                showMessage={showMessage}/>
+            <EditPostingWindow
+                showMessage={showMessage}
+                onPostingEdited={onPostingEdited}
+                show={showEditPosting}
+                onHide={closeEditWindow}
+                closeWindow={closeEditWindow}
+                onSubmitEdit={onSubmitEdit}
+                postingToEdit={postingToEdit}/>
         </>
     );
 }
