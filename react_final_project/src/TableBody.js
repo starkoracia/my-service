@@ -35,11 +35,11 @@ class TableBody extends Component {
             rows.push(
                 <tr key={-1}>
                     <td colSpan={fieldNames.length}>
-                <Container>
-                    <h4 style={{alignContent: "center"}}>
-                        Не найдено
-                    </h4>
-                </Container>
+                        <Container>
+                            <h4 style={{alignContent: "center"}}>
+                                Не найдено
+                            </h4>
+                        </Container>
                     </td>
                 </tr>
             )

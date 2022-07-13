@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import HystModal from "hystmodal";
 
 class HModal extends Component {
 

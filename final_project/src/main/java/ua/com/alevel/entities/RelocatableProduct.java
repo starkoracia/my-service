@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @ToString
-public class RelocatableProduct extends BaseEntity{
+public class RelocatableProduct extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

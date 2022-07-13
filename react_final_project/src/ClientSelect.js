@@ -92,7 +92,7 @@ function ClientSelect({
                 <Button className={'select-button'}
                         variant={"info"}
                         onClick={onClickAddClient}
-                        disabled={disabled} >
+                        disabled={disabled}>
                     +
                 </Button>
             </div>

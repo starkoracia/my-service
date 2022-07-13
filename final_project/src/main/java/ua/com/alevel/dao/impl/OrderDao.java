@@ -23,7 +23,7 @@ public class OrderDao implements DaoOrder {
     @Override
     public Boolean create(Order order) {
         entityManager.persist(order);
-        if(order.getId() != null) {
+        if (order.getId() != null) {
             return true;
         }
         return false;

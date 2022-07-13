@@ -54,7 +54,7 @@ public class ProductMaterialService implements ServiceProductMaterial {
         List<ProductMaterial> productMaterials = productDao.findAllFromRequest(request);
         PageDataResponse<ProductMaterialDto> dataResponse = new PageDataResponse<>();
         dataResponse.setDtoEntities(ProductMaterialDto.toDtoList(productMaterials));
-        if(request.getSearchString().equals("")) {
+        if (request.getSearchString().equals("")) {
             dataResponse.setAmountOfElements(count().intValue());
         } else {
             dataResponse.setAmountOfElements(countNumberOfSearchMatches(request).intValue());

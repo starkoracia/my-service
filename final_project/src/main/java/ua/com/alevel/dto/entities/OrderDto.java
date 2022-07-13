@@ -1,12 +1,9 @@
 package ua.com.alevel.dto.entities;
 
 import lombok.Data;
-import ua.com.alevel.dto.entities.ClientDto;
-import ua.com.alevel.dto.entities.EmployeeDto;
 import ua.com.alevel.entities.Order;
 import ua.com.alevel.entities.enums.OrderStatus;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
@@ -58,7 +55,7 @@ public class OrderDto extends BaseDto<Order> {
     }
 
     public static OrderDto toDto(Order order) {
-        if(order == null) {
+        if (order == null) {
             return null;
         }
         OrderDto dto = new OrderDto();

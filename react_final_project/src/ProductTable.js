@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
 import axios from "./api/axios";
-import {Button, Card, Container, Tab, Tabs} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import AddProductWindow from "./AddProductWindow";
 import EditProductWindow from "./EditProductWindow";
 
@@ -37,7 +37,7 @@ function ProductTable({showMessage, productTableUpdate, setProductTableUpdate}) 
     }, [amountOfElements, products])
 
     useEffect(() => {
-        if(productTableUpdate) {
+        if (productTableUpdate) {
             setProductTableUpdate(false);
         }
         getElements();
@@ -251,18 +251,18 @@ function ProductTable({showMessage, productTableUpdate, setProductTableUpdate}) 
                 numberOfRows={numberOfRows}
                 tableCardHeader={createTableCardHeader()}
                 elements={products}
-                createRowColumns={createRowColumns} />
+                createRowColumns={createRowColumns}/>
             <AddProductWindow
                 show={showAddProduct}
                 closeWindow={() => setShowAddProduct(false)}
                 onProductCreated={onProductCreated}
-                showMessage={showMessage} />
+                showMessage={showMessage}/>
             <EditProductWindow
                 show={showEditProduct}
                 closeWindow={() => setShowEditProduct(false)}
                 onSubmitEdit={onSubmitProductEdit}
                 productToEdit={productToEdit}
-                showMessage={showMessage} />
+                showMessage={showMessage}/>
             {/*<EditClientWindow*/}
             {/*    show={showEditClient}*/}
             {/*    closeEditWindow={() => setShowEditClient(false)}*/}

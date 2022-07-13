@@ -2,16 +2,15 @@ import {Button, Card, Container, Form, Modal} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import {Scrollbars} from "react-custom-scrollbars";
 import axios from "./api/axios";
-import $ from "jquery";
 import ClientSelect from "./ClientSelect";
 import EmployeeSelect from "./EmployeeSelect";
 import RelocatableProductsTable from "./RelocatableProductsTable";
 import AddPaymentWindow from "./AddPaymentWindow";
 
 export default function AddWriteOffWindow({
-                                             show, closeWindow, showMessage,
-                                             onWriteOffCreated
-                                         }) {
+                                              show, closeWindow, showMessage,
+                                              onWriteOffCreated
+                                          }) {
     const [descriptionValue, setDescriptionValue] = useState('');
     const [clientSelectValue, setClientSelectValue] = useState({});
     const [employeeSelectValue, setEmployeeSelectValue] = useState({});
@@ -45,7 +44,7 @@ export default function AddWriteOffWindow({
 
     useEffect(() => {
         calculateWriteOffAmount();
-    },[relocatableProducts])
+    }, [relocatableProducts])
 
     function initData() {
         clearForm();
@@ -205,7 +204,8 @@ export default function AddWriteOffWindow({
                                         <hr/>
                                         <div style={style.writeOffAmountDiv}>
                                             <h4 style={style.writeOffAmountH4}>К оплате :</h4>
-                                            <Card className={'amount-cash-card'} style={style.writeOffAmountCashCardDiv}>
+                                            <Card className={'amount-cash-card'}
+                                                  style={style.writeOffAmountCashCardDiv}>
                                                 <Card.Body>
                                                     <Container className={'amount-cash-container'}
                                                                style={style.writeOffAmountCashCardContainer}>
@@ -241,7 +241,7 @@ export default function AddWriteOffWindow({
                 closeWindow={() => setShowAddPayment(false)}
                 onPaymentCreated={onPaymentCreated}
                 isIncomePayment={true}
-                showMessage={showMessage} />
+                showMessage={showMessage}/>
         </>
     );
 }

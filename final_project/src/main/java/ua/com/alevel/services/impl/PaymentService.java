@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.PaymentDao;
 import ua.com.alevel.dto.PageDataRequest;
 import ua.com.alevel.dto.PageDataResponse;
-import ua.com.alevel.dto.entities.ClientDto;
 import ua.com.alevel.dto.entities.PaymentDto;
 import ua.com.alevel.entities.Payment;
 import ua.com.alevel.services.ServicePayment;
@@ -27,7 +26,7 @@ public class PaymentService implements ServicePayment {
     public Boolean create(Payment payment) {
         BigDecimal balanceBefore = getBalanceFromLastPayment();
         BigDecimal balanceAfter;
-        if(payment.getIncome()) {
+        if (payment.getIncome()) {
             balanceAfter = balanceBefore.add(payment.getAmount());
         } else {
             balanceAfter = balanceBefore.subtract(payment.getAmount());
@@ -68,7 +67,7 @@ public class PaymentService implements ServicePayment {
         List<Payment> payments = paymentDao.findAllFromRequest(request);
         PageDataResponse<PaymentDto> dataResponse = new PageDataResponse<>();
         dataResponse.setDtoEntities(PaymentDto.toDtoList(payments));
-        if(request.getSearchString().equals("")) {
+        if (request.getSearchString().equals("")) {
             dataResponse.setAmountOfElements(count().intValue());
         } else {
             dataResponse.setAmountOfElements(payments.size());

@@ -39,8 +39,8 @@ export default class Root extends Component {
                 <ShowMessage
                     show={alertIsShow}
                     variant={alertVariant}
-                    message={alertMessage} />
-                <Navbar />
+                    message={alertMessage}/>
+                <Navbar/>
                 <Routes>
                     <Route exact path="/" element={<Navigate replace to={"/clients"}/>}/>
                     <Route path="/clients/*" element={<ClientTable showMessage={showMessage}/>}/>

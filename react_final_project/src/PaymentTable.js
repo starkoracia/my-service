@@ -56,13 +56,13 @@ function PaymentTable({showMessage}) {
     }, [searchField])
 
     function getElements() {
-        axios.post('/payments',{
-                numberOfElementsOnPage: numberOfRows,
-                pageNumber: pageNumber,
-                searchString: searchField,
-                isSortAsc: sort.isAsc,
-                sortBy: sort.sortField
-            })
+        axios.post('/payments', {
+            numberOfElementsOnPage: numberOfRows,
+            pageNumber: pageNumber,
+            searchString: searchField,
+            isSortAsc: sort.isAsc,
+            sortBy: sort.sortField
+        })
             .then((response) => {
                 getBalance();
                 setPayments(response.data.dtoEntities);
@@ -271,7 +271,7 @@ function PaymentTable({showMessage}) {
         </td>;
         rowColumns.push(commentColumn);
         let clientColumn = <td key={'client'}/>;
-        if(payment.client) {
+        if (payment.client) {
             const client = payment.client;
             const supplierSvg = client.isSupplier &&
                 <img src={'/images/supplier.svg'} className={'supplier-svg'}/>
@@ -324,7 +324,9 @@ function PaymentTable({showMessage}) {
                 <EditClientWindow
                     show={showEditClient}
                     closeEditWindow={() => setShowEditClient(false)}
-                    onClientEdited={() => {getElements()}}
+                    onClientEdited={() => {
+                        getElements()
+                    }}
                     editingClient={editingClient}
                     showMessage={showMessage}/>
                 <AddPaymentWindow

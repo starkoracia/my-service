@@ -19,7 +19,7 @@ class Table extends Component {
     countFirstPageElement = () => {
         const currentPage = this.props.currentPage;
         const numberOfRows = this.props.numberOfRows;
-        if(this.props.amountOfElements == 0) {
+        if (this.props.amountOfElements == 0) {
             return 0;
         }
         return (currentPage - 1) * numberOfRows + 1
@@ -63,7 +63,7 @@ class Table extends Component {
         const disabled = this.props.disabled;
         return (
             <Container className={`table-wrap ` + (searchFieldRemove && 'auto-width')}
-            style={disabled && {pointerEvents: 'none'}}>
+                       style={disabled && {pointerEvents: 'none'}}>
                 <Card className={'table-card ' + (searchFieldRemove && 'auto-height')}>
                     <Card.Header className={'table-card-header'}>
                         {tableCardHeader}

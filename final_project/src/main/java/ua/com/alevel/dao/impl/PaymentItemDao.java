@@ -23,7 +23,7 @@ public class PaymentItemDao implements DaoPaymentItem {
     @Override
     public Boolean create(PaymentItem paymentItem) {
         entityManager.persist(paymentItem);
-        if(paymentItem.getId() != null) {
+        if (paymentItem.getId() != null) {
             return true;
         }
         return false;

@@ -45,7 +45,7 @@ export default function AddPostingWindow({
 
     useEffect(() => {
         calculatePostingAmount();
-    },[relocatableProducts])
+    }, [relocatableProducts])
 
     function initData() {
         clearForm();
@@ -258,7 +258,7 @@ export default function AddPostingWindow({
                 closeWindow={() => setShowAddPayment(false)}
                 onPaymentCreated={onPaymentCreated}
                 isIncomePayment={false}
-                showMessage={showMessage} />
+                showMessage={showMessage}/>
         </>
     );
 }

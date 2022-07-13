@@ -4,17 +4,19 @@ import {Scrollbars} from "react-custom-scrollbars";
 import axios from "./api/axios";
 import $ from "jquery";
 
-export default function AddPaymentItemWindow({show, closeAddWindow, showMessage, onItemCreated,
-                                                 isIncomePayment}) {
+export default function AddPaymentItemWindow({
+                                                 show, closeAddWindow, showMessage, onItemCreated,
+                                                 isIncomePayment
+                                             }) {
 
     const [itemNameInputValue, setItemNameInputValue] = useState('');
     const [isIncomeValue, setIsIncomeValue] = useState(true);
 
     useEffect(() => {
-        if(show) {
+        if (show) {
             initData();
         }
-    },[show])
+    }, [show])
 
     function initData() {
         setIsIncomeValue(isIncomePayment);
@@ -53,7 +55,7 @@ export default function AddPaymentItemWindow({show, closeAddWindow, showMessage,
     }
 
     function isNameNotValid() {
-        if(itemNameInputValue.trim() === '') {
+        if (itemNameInputValue.trim() === '') {
             return true;
         }
         return false;
@@ -64,7 +66,7 @@ export default function AddPaymentItemWindow({show, closeAddWindow, showMessage,
     }
 
     function nameInvalidMessage() {
-        if(isNameNotValid()) {
+        if (isNameNotValid()) {
             return (
                 <Form.Text className={'invalid-message'}>
                     Имя не должно быть пустым!
@@ -95,7 +97,7 @@ export default function AddPaymentItemWindow({show, closeAddWindow, showMessage,
                 <Card className={"add-card"}>
                     <Scrollbars style={{width: "100%", height: "100%"}}>
                         <Card.Body className={"add-card-body"}>
-                            <Form className={"add-form"} 
+                            <Form className={"add-form"}
                                   onSubmit={(event) => event.preventDefault()}>
                                 <Form.Group className={"add-form-group"}>
                                     <div style={{display: 'flex'}}>
@@ -141,7 +143,7 @@ export default function AddPaymentItemWindow({show, closeAddWindow, showMessage,
                     <Card.Footer className={"add-card-footer"}>
                         <div className={"add-cancel-buttons-div"}>
                             <Button className={"add-form-button"} variant={"secondary"} type={"button"}
-                                disabled={isFormNotValid()}
+                                    disabled={isFormNotValid()}
                                     onClick={onSubmit}>
                                 Добавить
                             </Button>

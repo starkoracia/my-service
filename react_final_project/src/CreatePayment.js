@@ -1,5 +1,5 @@
-import React, {Component, useEffect, useState} from 'react';
-import {Button, Card, Container, Form, FormText} from "react-bootstrap";
+import React, {useEffect, useState} from 'react';
+import {Button, Card, Container, Form} from "react-bootstrap";
 import Select from "react-select";
 import axios from "./api/axios";
 
@@ -251,7 +251,8 @@ function CreatePayment({customerToPayment, cancelCustomer}) {
                                     value={accountFromSelectValue}
                                     onChange={onChangeAccountFromSelect}/>
                             {accountFromIsSelected && (
-                                <Button className={'download-csv-button'} onClick={onClickDownloadCsv}>Выписка по счету</Button>
+                                <Button className={'download-csv-button'} onClick={onClickDownloadCsv}>Выписка по
+                                    счету</Button>
                             )}
                             <hr/>
                         </Form.Group>

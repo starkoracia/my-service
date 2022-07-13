@@ -3,7 +3,6 @@ package ua.com.alevel.dto.entities;
 import lombok.Data;
 import ua.com.alevel.entities.ProductMaterial;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class ProductMaterialDto extends BaseDto<ProductMaterial> {
     }
 
     public static ProductMaterialDto toDto(ProductMaterial product) {
-        if(product == null) {
+        if (product == null) {
             return null;
         }
         ProductMaterialDto dto = new ProductMaterialDto();

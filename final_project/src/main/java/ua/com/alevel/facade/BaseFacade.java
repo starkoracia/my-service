@@ -10,13 +10,21 @@ import java.util.Optional;
 public interface BaseFacade<DTO extends BaseDto> {
 
     Boolean create(DTO dto);
+
     void update(DTO dto);
+
     void delete(DTO dto);
+
     boolean existById(Long id);
+
     Optional<DTO> findById(Long id);
+
     List<DTO> findAll();
+
     PageDataResponse<DTO> findAllFromRequest(PageDataRequest request);
+
     Long countNumberOfSearchMatches(PageDataRequest request);
+
     Long count();
 
 }

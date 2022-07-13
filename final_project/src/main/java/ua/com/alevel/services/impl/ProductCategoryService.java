@@ -2,7 +2,6 @@ package ua.com.alevel.services.impl;
 
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.ProductCategoryDao;
-import ua.com.alevel.dto.entities.ProductCategoryDto;
 import ua.com.alevel.entities.ProductCategory;
 import ua.com.alevel.services.ServiceProductCategory;
 

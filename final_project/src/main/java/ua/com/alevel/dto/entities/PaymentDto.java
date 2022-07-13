@@ -38,7 +38,7 @@ public class PaymentDto extends BaseDto<Payment> {
     }
 
     public static PaymentDto toDto(Payment payment) {
-        if(payment == null) {
+        if (payment == null) {
             return null;
         }
         PaymentDto dto = new PaymentDto();

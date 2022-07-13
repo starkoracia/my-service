@@ -23,7 +23,7 @@ public class EmployeeDao implements DaoEmployee {
     @Override
     public Boolean create(Employee employee) {
         entityManager.persist(employee);
-        if(employee.getId() != null) {
+        if (employee.getId() != null) {
             return true;
         }
         return false;

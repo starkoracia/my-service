@@ -2,7 +2,6 @@ import {Button, Card, Container, Form, Modal} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import {Scrollbars} from "react-custom-scrollbars";
 import axios from "./api/axios";
-import $ from "jquery";
 import ProductCategorySelect from "./ProductCategorySelect";
 
 export default function EditProductWindow({

@@ -3,8 +3,10 @@ import React, {useEffect, useState} from "react";
 import {Scrollbars} from "react-custom-scrollbars";
 import axios from "./api/axios";
 
-export default function EditClientWindow({show, closeEditWindow,
-                                             editingClient, showMessage, onClientEdited}) {
+export default function EditClientWindow({
+                                             show, closeEditWindow,
+                                             editingClient, showMessage, onClientEdited
+                                         }) {
     const [isSupplierValue, setIsSupplierValue] = useState(false);
     const [nameInputValue, setNameInputValue] = useState('');
     const [emailInputValue, setEmailInputValue] = useState('');

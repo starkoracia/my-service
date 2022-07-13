@@ -34,7 +34,7 @@ export default function AddProductWindow({
         if (isRepairCostCountInPercentageValue) {
             setRepairCostValue(countingCostWithMargin(repairMarginPercentageValue));
         }
-        if(isTradeCostCountInPercentageValue) {
+        if (isTradeCostCountInPercentageValue) {
             setTradeCostValue(countingCostWithMargin(tradeMarginPercentageValue));
         }
     }, [zeroCostValue, repairMarginPercentageValue, tradeMarginPercentageValue,
@@ -110,7 +110,7 @@ export default function AddProductWindow({
     }
 
     function nameInvalidMessage() {
-        if(isNameNotValid()) {
+        if (isNameNotValid()) {
             return (
                 <Form.Text className={'invalid-message'}>
                     Имя не должно быть пустым!
@@ -232,10 +232,11 @@ export default function AddProductWindow({
                                                 </Form.Label>
                                                 <div className={'percentage-div'}>
                                                     <Form.Check type={'checkbox'} placeholder={"Поставщик"}>
-                                                        <Form.Check.Input className={'checkbox is-count-in-percentage-checkbox'}
-                                                                          checked={isRepairCostCountInPercentageValue}
-                                                                          onChange={(e) =>
-                                                                              setIsRepairCostCountInPercentageValue(e.target.checked)}/>
+                                                        <Form.Check.Input
+                                                            className={'checkbox is-count-in-percentage-checkbox'}
+                                                            checked={isRepairCostCountInPercentageValue}
+                                                            onChange={(e) =>
+                                                                setIsRepairCostCountInPercentageValue(e.target.checked)}/>
                                                     </Form.Check>
                                                     <Form.Label className={'form-group-label percentage-label'}>
                                                         %
@@ -263,10 +264,11 @@ export default function AddProductWindow({
                                                 </Form.Label>
                                                 <div className={'percentage-div'}>
                                                     <Form.Check type={'checkbox'} placeholder={"Поставщик"}>
-                                                        <Form.Check.Input className={'checkbox is-count-in-percentage-checkbox'}
-                                                                          checked={isTradeCostCountInPercentageValue}
-                                                                          onChange={(e) =>
-                                                                              setIsTradeCostCountInPercentageValue(e.target.checked)}/>
+                                                        <Form.Check.Input
+                                                            className={'checkbox is-count-in-percentage-checkbox'}
+                                                            checked={isTradeCostCountInPercentageValue}
+                                                            onChange={(e) =>
+                                                                setIsTradeCostCountInPercentageValue(e.target.checked)}/>
                                                     </Form.Check>
                                                     <Form.Label className={'form-group-label percentage-label'}>
                                                         %

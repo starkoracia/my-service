@@ -5,14 +5,12 @@ import ua.com.alevel.dto.PageDataRequest;
 import ua.com.alevel.dto.PageDataResponse;
 import ua.com.alevel.dto.entities.RelocatableProductDto;
 import ua.com.alevel.dto.entities.WarehousePostingDto;
-import ua.com.alevel.entities.RelocatableProduct;
 import ua.com.alevel.entities.WarehousePosting;
 import ua.com.alevel.facade.FacadeWarehousePosting;
 import ua.com.alevel.services.impl.WarehousePostingService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class WarehousePostingFacade implements FacadeWarehousePosting {

@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-public class WarehouseWriteOffDao  implements DaoWarehouseWriteOff {
+public class WarehouseWriteOffDao implements DaoWarehouseWriteOff {
 
     EntityManager entityManager;
 
@@ -26,7 +26,7 @@ public class WarehouseWriteOffDao  implements DaoWarehouseWriteOff {
     @Override
     public Boolean create(WarehouseWriteOff writeOff) {
         entityManager.persist(writeOff);
-        if(writeOff.getId() != null) {
+        if (writeOff.getId() != null) {
             return true;
         }
         return false;

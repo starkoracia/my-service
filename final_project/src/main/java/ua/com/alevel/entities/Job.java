@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-public class Job extends BaseEntity{
+public class Job extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

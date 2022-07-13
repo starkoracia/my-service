@@ -1,9 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
 import axios from "./api/axios";
-import HystModal from "hystmodal";
-import {Route, Routes, useNavigate} from 'react-router-dom';
-import CreatePayment from "./CreatePayment";
+import {useNavigate} from 'react-router-dom';
 import AddClientWindow from './AddClientWindow';
 import EditClientWindow from "./EditClientWindow";
 
@@ -53,13 +51,13 @@ function ClientTable({showMessage}) {
     }, [searchField])
 
     const getElements = () => {
-        axios.post('/clients',{
-                numberOfElementsOnPage: numberOfRows,
-                pageNumber: pageNumber,
-                searchString: searchField,
-                isSortAsc: sort.isAsc,
-                sortBy: sort.sortField
-            })
+        axios.post('/clients', {
+            numberOfElementsOnPage: numberOfRows,
+            pageNumber: pageNumber,
+            searchString: searchField,
+            isSortAsc: sort.isAsc,
+            sortBy: sort.sortField
+        })
             .then((response) => {
                 setClients(response.data.dtoEntities);
                 setAmountOfElements(response.data.amountOfElements);
@@ -72,7 +70,7 @@ function ClientTable({showMessage}) {
     function editClient(client) {
         axios.post('/clients/edit', client)
             .then((response) => {
-                if(response.data === true) {
+                if (response.data === true) {
                     showMessage('Успешно сохранен', 'success')
 
                 } else {

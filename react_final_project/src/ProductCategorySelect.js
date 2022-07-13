@@ -33,7 +33,7 @@ function ProductCategorySelect({show, itemSelectValue, setItemSelectValue, showM
 
     function createAndSetItemOptions(items) {
         const options = convertItemsToOptions(items);
-        if(show) {
+        if (show) {
             setItemSelectValue(options[0]);
         }
         setItemOptions(options);

@@ -59,7 +59,7 @@ public class ClientService implements ServiceClient {
         List<Client> clients = clientDao.findAllFromRequest(request);
         PageDataResponse<ClientDto> dataResponse = new PageDataResponse<>();
         dataResponse.setDtoEntities(ClientDto.toDtoList(clients));
-        if(request.getSearchString().equals("")) {
+        if (request.getSearchString().equals("")) {
             dataResponse.setAmountOfElements(count().intValue());
         } else {
             dataResponse.setAmountOfElements(clients.size());

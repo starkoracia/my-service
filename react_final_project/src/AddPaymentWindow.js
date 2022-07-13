@@ -1,8 +1,7 @@
 import {Button, Card, Container, Form, Modal} from "react-bootstrap";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Scrollbars} from "react-custom-scrollbars";
 import axios from "./api/axios";
-import Select from "react-select";
 import $ from "jquery";
 import ClientSelect from "./ClientSelect";
 import PaymentItemSelect from "./PaymentItemSelect";
@@ -58,7 +57,7 @@ export default function AddPaymentWindow({
             paymentItem: paymentItemSelectValue.value
         }
         console.log(payment);
-        if(paymentData) {
+        if (paymentData) {
             onPaymentCreated(payment)
         } else {
             createPayment(payment);

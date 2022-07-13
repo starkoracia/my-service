@@ -3,7 +3,6 @@ package ua.com.alevel.dto.entities;
 import lombok.Data;
 import ua.com.alevel.entities.PaymentItem;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -21,7 +20,7 @@ public class PaymentItemDto extends BaseDto<PaymentItem> {
     }
 
     public static PaymentItemDto toDto(PaymentItem item) {
-        if(item == null) {
+        if (item == null) {
             return null;
         }
         PaymentItemDto dto = new PaymentItemDto();

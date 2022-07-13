@@ -20,16 +20,16 @@ class TableHeader extends Component {
 
         headerFieldNamesMap.forEach((fieldName, headerName, map) => {
             headerRow.push(
-                    <th key={headerName} className={'table-header-column'}
-                        style={(i === 0 || i + 1 === size) ? {borderWidth: 0} : {}}
-                        onClick={() => onClickSortIcon(fieldName, isAsc)}>
-                        <SortIcon
-                            isAsc={isAsc}
-                            fieldName={fieldName}
-                            headerName={headerName}
-                            sortField={sortField}
-                            onClickSortIcon={onClickSortIcon}/>
-                    </th>
+                <th key={headerName} className={'table-header-column'}
+                    style={(i === 0 || i + 1 === size) ? {borderWidth: 0} : {}}
+                    onClick={() => onClickSortIcon(fieldName, isAsc)}>
+                    <SortIcon
+                        isAsc={isAsc}
+                        fieldName={fieldName}
+                        headerName={headerName}
+                        sortField={sortField}
+                        onClickSortIcon={onClickSortIcon}/>
+                </th>
             )
             i++;
         })
@@ -79,7 +79,7 @@ class SortIcon extends Component {
         }
         return (
             <div className={'sort-icon'}
-                 >
+            >
                 <label className={'sort-icon-label'}>{headerName}</label>
                 <div className={'icon-block'}>
                     {iconBlock}

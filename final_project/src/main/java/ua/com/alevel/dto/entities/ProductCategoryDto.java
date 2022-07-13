@@ -3,7 +3,6 @@ package ua.com.alevel.dto.entities;
 import lombok.Data;
 import ua.com.alevel.entities.ProductCategory;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -19,7 +18,7 @@ public class ProductCategoryDto extends BaseDto<ProductCategory> {
     }
 
     public static ProductCategoryDto toDto(ProductCategory category) {
-        if(category == null) {
+        if (category == null) {
             return null;
         }
         ProductCategoryDto dto = new ProductCategoryDto();

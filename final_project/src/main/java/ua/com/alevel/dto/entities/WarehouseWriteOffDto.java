@@ -3,7 +3,6 @@ package ua.com.alevel.dto.entities;
 import lombok.Data;
 import ua.com.alevel.entities.WarehouseWriteOff;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -37,7 +36,7 @@ public class WarehouseWriteOffDto extends BaseDto<WarehouseWriteOff> {
     }
 
     public static WarehouseWriteOffDto toDto(WarehouseWriteOff writeOff) {
-        if(writeOff == null) {
+        if (writeOff == null) {
             return null;
         }
         WarehouseWriteOffDto dto = new WarehouseWriteOffDto();

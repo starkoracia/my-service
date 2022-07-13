@@ -23,7 +23,7 @@ public class ProductCategoryDao implements DaoProductCategory {
     @Override
     public Boolean create(ProductCategory category) {
         entityManager.persist(category);
-        if(category.getId() != null) {
+        if (category.getId() != null) {
             return true;
         }
         return false;

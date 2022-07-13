@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Card, Container, Tab, Tabs} from "react-bootstrap";
+import {Card, Tab, Tabs} from "react-bootstrap";
 import ProductTable from "./ProductTable";
 import PostingTable from "./PostingTable";
 import WriteOffTable from "./WriteOffTable";

@@ -9,10 +9,10 @@ export default function AddProductCategoryWindow({show, closeAddWindow, showMess
     const [itemNameInputValue, setItemNameInputValue] = useState('');
 
     useEffect(() => {
-        if(show) {
+        if (show) {
             initData();
         }
-    },[show])
+    }, [show])
 
     function initData() {
         $('.payment-input.input-text').focus();
@@ -48,7 +48,7 @@ export default function AddProductCategoryWindow({show, closeAddWindow, showMess
     }
 
     function isNameNotValid() {
-        if(itemNameInputValue.trim() === '') {
+        if (itemNameInputValue.trim() === '') {
             return true;
         }
         return false;
@@ -59,7 +59,7 @@ export default function AddProductCategoryWindow({show, closeAddWindow, showMess
     }
 
     function nameInvalidMessage() {
-        if(isNameNotValid()) {
+        if (isNameNotValid()) {
             return (
                 <Form.Text className={'invalid-message'}>
                     Имя не должно быть пустым!

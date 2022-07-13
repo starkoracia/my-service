@@ -13,7 +13,7 @@ class PaginationDiv extends Component {
         }
         if (currentPage > 1) {
             items.push(<Pagination.Item key={currentPage - 1}
-                onClick={() => this.props.paginationOnClick(currentPage - 1)}>{currentPage - 1}</Pagination.Item>)
+                                        onClick={() => this.props.paginationOnClick(currentPage - 1)}>{currentPage - 1}</Pagination.Item>)
         }
         items.push(
             <Pagination.Item
@@ -54,7 +54,7 @@ class PaginationDiv extends Component {
             <Pagination size="sm">
                 {this.createItems(currentPage, totalPages)}
                 <Pagination.Item className={'back-pagination-button'}
-                    disabled={this.isFirstPrevDisabled()}
+                                 disabled={this.isFirstPrevDisabled()}
                                  onClick={
                                      () => this.props.paginationOnClick(this.props.currentPage - 1)
                                  }>

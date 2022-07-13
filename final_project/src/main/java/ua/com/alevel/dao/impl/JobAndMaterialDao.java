@@ -23,7 +23,7 @@ public class JobAndMaterialDao implements DaoJobAndMaterial {
     @Override
     public Boolean create(JobAndMaterial jobAndMaterial) {
         entityManager.persist(jobAndMaterial);
-        if(jobAndMaterial.getId() != null) {
+        if (jobAndMaterial.getId() != null) {
             return true;
         }
         return false;

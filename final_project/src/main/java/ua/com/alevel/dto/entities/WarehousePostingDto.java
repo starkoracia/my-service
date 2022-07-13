@@ -3,7 +3,6 @@ package ua.com.alevel.dto.entities;
 import lombok.Data;
 import ua.com.alevel.entities.WarehousePosting;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,7 +34,7 @@ public class WarehousePostingDto extends BaseDto<WarehousePosting> {
     }
 
     public static WarehousePostingDto toDto(WarehousePosting posting) {
-        if(posting == null) {
+        if (posting == null) {
             return null;
         }
         WarehousePostingDto dto = new WarehousePostingDto();

@@ -3,7 +3,6 @@ package ua.com.alevel.dto.entities;
 import lombok.Data;
 import ua.com.alevel.entities.RelocatableProduct;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class RelocatableProductDto extends BaseDto<RelocatableProduct> {
     }
 
     public static RelocatableProductDto toDto(RelocatableProduct relocatable) {
-        if(relocatable == null) {
+        if (relocatable == null) {
             return null;
         }
         RelocatableProductDto dto = new RelocatableProductDto();

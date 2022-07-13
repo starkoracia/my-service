@@ -28,17 +28,17 @@ public class ClientDto extends BaseDto<Client> {
     }
 
     public static ClientDto toDto(Client client) {
-        if(client == null) {
+        if (client == null) {
             return null;
         }
         ClientDto dto = new ClientDto();
-            dto.setId(client.getId());
-            dto.setIsSupplier(client.getIsSupplier());
-            dto.setMobile(client.getMobile());
-            dto.setEmail(client.getEmail());
-            dto.setName(client.getName());
-            dto.setAnnotation(client.getAnnotation());
-            dto.setRecommendation(client.getRecommendation());
+        dto.setId(client.getId());
+        dto.setIsSupplier(client.getIsSupplier());
+        dto.setMobile(client.getMobile());
+        dto.setEmail(client.getEmail());
+        dto.setName(client.getName());
+        dto.setAnnotation(client.getAnnotation());
+        dto.setRecommendation(client.getRecommendation());
         return dto;
     }
 

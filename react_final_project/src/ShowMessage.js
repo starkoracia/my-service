@@ -12,13 +12,13 @@ class ShowMessage extends Component {
             style = {borderColor: 'pink'};
         }
         return (
-                <Alert className={'show-message'}
-                       show={show}
-                       style={style}
-                       variant={variant}>
-                    {this.props.message}
-                </Alert>
-            );
+            <Alert className={'show-message'}
+                   show={show}
+                   style={style}
+                   variant={variant}>
+                {this.props.message}
+            </Alert>
+        );
     }
 }
 

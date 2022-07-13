@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
 import axios from "./api/axios";
-import {Card, Container, Tab, Tabs} from "react-bootstrap";
 import AddWriteOffWindow from "./AddWriteOffWindow";
 import EditClientWindow from "./EditClientWindow";
 import EditWriteOffWindow from "./EditWriteOffWindow";

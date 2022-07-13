@@ -5,12 +5,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.alevel.dao.DaoPayment;
 import ua.com.alevel.dto.PageDataRequest;
 import ua.com.alevel.entities.*;
-import ua.com.alevel.entities.enums.OrderStatus;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.persistence.criteria.*;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,16 +88,16 @@ public class PaymentDao implements DaoPayment {
                 cashierJoin, clientJoin);
         Order order = cb.asc(paymentRoot.get("id"));
 
-        if(sortBy.equals(Payment_.ID) || sortBy.equals(Payment_.DATE_TIME)
-        || sortBy.equals(Payment_.PAYMENT_ITEM) || sortBy.equals(Payment_.AMOUNT)
-        || sortBy.equals(Payment_.BALANCE_AFTER)) {
-            if(isSortAsc) {
+        if (sortBy.equals(Payment_.ID) || sortBy.equals(Payment_.DATE_TIME)
+                || sortBy.equals(Payment_.PAYMENT_ITEM) || sortBy.equals(Payment_.AMOUNT)
+                || sortBy.equals(Payment_.BALANCE_AFTER)) {
+            if (isSortAsc) {
                 order = cb.asc(paymentRoot.get(sortBy));
             } else {
                 order = cb.desc(paymentRoot.get(sortBy));
             }
         } else if (sortBy.equals(Payment_.CLIENT)) {
-            if(isSortAsc) {
+            if (isSortAsc) {
                 order = cb.asc(clientJoin.get(Client_.name));
             } else {
                 order = cb.desc(clientJoin.get(Client_.name));

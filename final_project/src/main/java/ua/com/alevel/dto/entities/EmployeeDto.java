@@ -4,7 +4,6 @@ import lombok.Data;
 import ua.com.alevel.entities.Employee;
 import ua.com.alevel.entities.enums.Position;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -26,7 +25,7 @@ public class EmployeeDto extends BaseDto<Employee> {
     }
 
     public static EmployeeDto toDto(Employee employee) {
-        if(employee == null) {
+        if (employee == null) {
             return null;
         }
         EmployeeDto dto = new EmployeeDto();

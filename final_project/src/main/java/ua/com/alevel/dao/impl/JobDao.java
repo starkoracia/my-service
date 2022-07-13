@@ -23,7 +23,7 @@ public class JobDao implements DaoJob {
     @Override
     public Boolean create(Job job) {
         entityManager.persist(job);
-        if(job.getId() != null) {
+        if (job.getId() != null) {
             return true;
         }
         return false;

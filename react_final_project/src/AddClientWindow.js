@@ -118,7 +118,7 @@ export default function AddClientWindow({
                                             <Form.Check.Input className={'checkbox'}
                                                               checked={isSupplierValue}
                                                               onChange={(e) => setIsSupplierValue(e.target.checked)}
-                                                              disabled={isSupplier} />
+                                                              disabled={isSupplier}/>
                                         </Form.Check>
                                         <img src={'/images/supplier.svg'} className={'supplier-checkbox-svg'}/>Поставщик
                                     </Form.Label>
