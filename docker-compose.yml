@@ -30,8 +30,6 @@ services:
       - ./react_final_project:/app
     ports:
       - "3000:3000"
-#    environment:
-#      PATH: "/app/node_modules/.bin:$PATH"
     command: npm start
     restart: always
     depends_on:
