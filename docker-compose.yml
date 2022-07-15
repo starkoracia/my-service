@@ -4,6 +4,8 @@ services:
   app:
     image: openjdk:17-alpine
     working_dir: /app
+    environment:
+      "db.host": "mysql"
     volumes:
       - ./final_project/target:/app
     command: java -jar final_project.jar
