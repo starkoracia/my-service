@@ -3,7 +3,7 @@ import Select from "react-select";
 import {Button} from "react-bootstrap";
 import AddProductWindow from "./AddProductWindow";
 import axios from "./api/axios";
-import configData from "./configData.js";
+import configData from "./config/configData.js";
 
 function RelocatableProductSelect({
                                       show, productSelectValue, setProductSelectValue,

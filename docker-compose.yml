@@ -1,0 +1,41 @@
+version: "3.7"
+
+services:
+  app:
+    image: openjdk:17-alpine
+    working_dir: /app
+    volumes:
+      - ./final_project/target:/app
+    command: java -jar final_project.jar
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - react
+      - mysql
+
+  mysql:
+    image: mysql
+    volumes:
+      - todo-mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 244268
+      MYSQL_DATABASE: final_project
+    restart: always
+
+  react:
+    image: node:18-alpine3.15
+    working_dir: /app
+    volumes:
+      - ./react_final_project:/app
+    ports:
+      - "3000:3000"
+#    environment:
+#      PATH: "/app/node_modules/.bin:$PATH"
+    command: npm start
+    restart: always
+    depends_on:
+      - mysql
+
+volumes:
+  todo-mysql-data:

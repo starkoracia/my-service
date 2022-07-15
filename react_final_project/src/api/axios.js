@@ -1,5 +1,5 @@
 import axios from "axios";
-import configData from "../configData";
+import configData from "../config/configData";
 
 
 export default axios.create({
