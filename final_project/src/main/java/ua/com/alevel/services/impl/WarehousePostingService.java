@@ -1,5 +1,7 @@
 package ua.com.alevel.services.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.ProductMaterialDao;
 import ua.com.alevel.dao.impl.RelocatableProductDao;
@@ -21,6 +23,7 @@ public class WarehousePostingService implements ServiceWarehousePosting {
     WarehousePostingDao postingDao;
     RelocatableProductDao relocatableProductDao;
     ProductMaterialDao productMaterialDao;
+    private Logger infoLogger = LoggerFactory.getLogger("info");
 
     public WarehousePostingService(WarehousePostingDao postingDao, RelocatableProductDao relocatableProductDao, ProductMaterialDao productMaterialDao) {
         this.postingDao = postingDao;
@@ -37,7 +40,9 @@ public class WarehousePostingService implements ServiceWarehousePosting {
         });
         posting.setDateTime(Calendar.getInstance());
 
-        return postingDao.create(posting);
+        Boolean isCreated = postingDao.create(posting);
+        infoLogger.info("Posting is created: {}", posting);
+        return isCreated;
     }
 
     private void setNewNumberOfProduct(RelocatableProduct relocatableProduct) {
@@ -51,11 +56,13 @@ public class WarehousePostingService implements ServiceWarehousePosting {
     @Override
     public void update(WarehousePosting posting) {
         postingDao.update(posting);
+        infoLogger.info("Posting is updated: {}", posting);
     }
 
     @Override
     public void delete(WarehousePosting posting) {
         postingDao.delete(posting);
+        infoLogger.info("Posting is deleted: {}", posting);
     }
 
     @Override

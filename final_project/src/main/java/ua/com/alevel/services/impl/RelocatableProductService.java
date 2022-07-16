@@ -1,5 +1,7 @@
 package ua.com.alevel.services.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.RelocatableProductDao;
 import ua.com.alevel.entities.RelocatableProduct;
@@ -12,6 +14,7 @@ import java.util.Optional;
 public class RelocatableProductService implements ServiceRelocatableProduct {
 
     RelocatableProductDao relocatableProductDao;
+    Logger infoLogger = LoggerFactory.getLogger("info");
 
     public RelocatableProductService(RelocatableProductDao relocatableProductDao) {
         this.relocatableProductDao = relocatableProductDao;
@@ -19,17 +22,21 @@ public class RelocatableProductService implements ServiceRelocatableProduct {
 
     @Override
     public Boolean create(RelocatableProduct relocatableProduct) {
-        return relocatableProductDao.create(relocatableProduct);
+        Boolean isCreated = relocatableProductDao.create(relocatableProduct);
+        infoLogger.info("RelocatableProduct is created: {}", relocatableProduct);
+        return isCreated;
     }
 
     @Override
     public void update(RelocatableProduct relocatableProduct) {
         relocatableProductDao.update(relocatableProduct);
+        infoLogger.info("RelocatableProduct is updated: {}", relocatableProduct);
     }
 
     @Override
     public void delete(RelocatableProduct relocatableProduct) {
         relocatableProductDao.delete(relocatableProduct);
+        infoLogger.info("RelocatableProduct is deleted: {}", relocatableProduct);
     }
 
     @Override

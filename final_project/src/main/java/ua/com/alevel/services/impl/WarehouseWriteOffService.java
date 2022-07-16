@@ -1,5 +1,7 @@
 package ua.com.alevel.services.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.ProductMaterialDao;
 import ua.com.alevel.dao.impl.RelocatableProductDao;
@@ -17,9 +19,10 @@ import java.util.Set;
 @Service
 public class WarehouseWriteOffService implements ServiceWarehouseWriteOff {
 
-    WarehouseWriteOffDao writeOffDao;
-    RelocatableProductDao relocatableProductDao;
-    ProductMaterialDao productMaterialDao;
+    private WarehouseWriteOffDao writeOffDao;
+    private RelocatableProductDao relocatableProductDao;
+    private ProductMaterialDao productMaterialDao;
+    private Logger infoLogger = LoggerFactory.getLogger("info");
 
     public WarehouseWriteOffService(WarehouseWriteOffDao writeOffDao, RelocatableProductDao relocatableProductDao, ProductMaterialDao productMaterialDao) {
         this.writeOffDao = writeOffDao;
@@ -36,7 +39,9 @@ public class WarehouseWriteOffService implements ServiceWarehouseWriteOff {
         });
         writeOff.setDateTime(Calendar.getInstance());
 
-        return writeOffDao.create(writeOff);
+        Boolean isCreated = writeOffDao.create(writeOff);
+        infoLogger.info("WriteOff is created: {}", writeOff);
+        return isCreated;
     }
 
     private void setNewNumberOfProduct(RelocatableProduct relocatableProduct) {
@@ -50,11 +55,13 @@ public class WarehouseWriteOffService implements ServiceWarehouseWriteOff {
     @Override
     public void update(WarehouseWriteOff writeOff) {
         writeOffDao.update(writeOff);
+        infoLogger.info("WriteOff is updated: {}", writeOff);
     }
 
     @Override
     public void delete(WarehouseWriteOff writeOff) {
         writeOffDao.delete(writeOff);
+        infoLogger.info("WriteOff is deleted: {}", writeOff);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package ua.com.alevel.services.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.PaymentItemDao;
 import ua.com.alevel.entities.PaymentItem;
@@ -12,6 +14,7 @@ import java.util.Optional;
 public class PaymentItemService implements ServicePaymentItem {
 
     PaymentItemDao itemDao;
+    private Logger infoLogger = LoggerFactory.getLogger("info");
 
     public PaymentItemService(PaymentItemDao itemDao) {
         this.itemDao = itemDao;
@@ -19,17 +22,21 @@ public class PaymentItemService implements ServicePaymentItem {
 
     @Override
     public Boolean create(PaymentItem item) {
-        return itemDao.create(item);
+        Boolean isCreated = itemDao.create(item);
+        infoLogger.info("PaymentItem is created: {}", item);
+        return isCreated;
     }
 
     @Override
     public void update(PaymentItem item) {
         itemDao.update(item);
+        infoLogger.info("PaymentItem is updated: {}", item);
     }
 
     @Override
     public void delete(PaymentItem item) {
         itemDao.delete(item);
+        infoLogger.info("PaymentItem is deleted: {}", item);
     }
 
     @Override

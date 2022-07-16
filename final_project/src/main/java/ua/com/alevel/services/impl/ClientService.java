@@ -18,7 +18,6 @@ public class ClientService implements ServiceClient {
 
     ClientDao clientDao;
     private Logger infoLogger = LoggerFactory.getLogger("info");
-    private Logger errorLogger = LoggerFactory.getLogger("error");
 
     public ClientService(ClientDao clientDao) {
         this.clientDao = clientDao;
@@ -27,18 +26,20 @@ public class ClientService implements ServiceClient {
     @Override
     public Boolean create(Client client) {
         Boolean isCreated = clientDao.create(client);
-        infoLogger.info("Create client: {}", client);
+        infoLogger.info("Client is created: {}", client);
         return isCreated;
     }
 
     @Override
     public void update(Client client) {
         clientDao.update(client);
+        infoLogger.info("Client is updated: {}", client);
     }
 
     @Override
     public void delete(Client client) {
         clientDao.delete(client);
+        infoLogger.info("Client is deleted: {}", client);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package ua.com.alevel.services.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.ProductCategoryDao;
 import ua.com.alevel.entities.ProductCategory;
@@ -12,6 +14,7 @@ import java.util.Optional;
 public class ProductCategoryService implements ServiceProductCategory {
 
     ProductCategoryDao productCategoryDao;
+    private Logger infoLogger = LoggerFactory.getLogger("info");
 
     public ProductCategoryService(ProductCategoryDao productCategoryDao) {
         this.productCategoryDao = productCategoryDao;
@@ -19,17 +22,21 @@ public class ProductCategoryService implements ServiceProductCategory {
 
     @Override
     public Boolean create(ProductCategory category) {
-        return productCategoryDao.create(category);
+        Boolean isCreated = productCategoryDao.create(category);
+        infoLogger.info("ProductCategory is created: {}", category);
+        return isCreated;
     }
 
     @Override
     public void update(ProductCategory category) {
         productCategoryDao.update(category);
+        infoLogger.info("ProductCategory is updated: {}", category);
     }
 
     @Override
     public void delete(ProductCategory category) {
         productCategoryDao.delete(category);
+        infoLogger.info("ProductCategory is deleted: {}", category);
     }
 
     @Override

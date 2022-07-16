@@ -1,5 +1,7 @@
 package ua.com.alevel.services.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.PaymentDao;
 import ua.com.alevel.dto.PageDataRequest;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class PaymentService implements ServicePayment {
 
     PaymentDao paymentDao;
+    private Logger infoLogger = LoggerFactory.getLogger("info");
 
     public PaymentService(PaymentDao paymentDao) {
         this.paymentDao = paymentDao;
@@ -35,17 +38,21 @@ public class PaymentService implements ServicePayment {
         payment.setBalanceAfter(balanceAfter);
         payment.setDateTime(Calendar.getInstance());
 
-        return paymentDao.create(payment);
+        Boolean isCreated = paymentDao.create(payment);
+        infoLogger.info("Payment is created: {}", payment);
+        return isCreated;
     }
 
     @Override
     public void update(Payment payment) {
         paymentDao.update(payment);
+        infoLogger.info("Payment is updated: {}", payment);
     }
 
     @Override
     public void delete(Payment payment) {
         paymentDao.delete(payment);
+        infoLogger.info("Payment is deleted: {}", payment);
     }
 
     @Override

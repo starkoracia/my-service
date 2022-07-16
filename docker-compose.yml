@@ -7,8 +7,8 @@ services:
     environment:
       "db.host": "mysql"
     volumes:
-      - ./final_project/target:/app
-    command: java -jar final_project.jar
+      - ./final_project:/app
+    command: java -jar ./target/final_project.jar
     restart: always
     ports:
       - "8080:8080"

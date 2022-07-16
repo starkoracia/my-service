@@ -1,5 +1,7 @@
 package ua.com.alevel.services.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.ProductMaterialDao;
 import ua.com.alevel.dto.PageDataRequest;
@@ -15,6 +17,7 @@ import java.util.Optional;
 public class ProductMaterialService implements ServiceProductMaterial {
 
     ProductMaterialDao productDao;
+    Logger infoLogger = LoggerFactory.getLogger("info");
 
     public ProductMaterialService(ProductMaterialDao productDao) {
         this.productDao = productDao;
@@ -22,17 +25,21 @@ public class ProductMaterialService implements ServiceProductMaterial {
 
     @Override
     public Boolean create(ProductMaterial product) {
-        return productDao.create(product);
+        Boolean isCreated = productDao.create(product);
+        infoLogger.info("ProductMaterial is created: {}", product);
+        return isCreated;
     }
 
     @Override
     public void update(ProductMaterial product) {
         productDao.update(product);
+        infoLogger.info("ProductMaterial is updated: {}", product);
     }
 
     @Override
     public void delete(ProductMaterial product) {
         productDao.delete(product);
+        infoLogger.info("ProductMaterial is deleted: {}", product);
     }
 
     @Override
