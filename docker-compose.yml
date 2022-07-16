@@ -6,6 +6,7 @@ services:
     working_dir: /app
     environment:
       "db.host": "mysql"
+      "spring.profiles.active": "prod"
     volumes:
       - ./final_project:/app
     command: java -jar ./target/final_project.jar

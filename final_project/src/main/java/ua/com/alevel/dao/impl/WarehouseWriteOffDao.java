@@ -3,13 +3,14 @@ package ua.com.alevel.dao.impl;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.alevel.dao.DaoWarehouseWriteOff;
-import ua.com.alevel.entities.RelocatableProduct;
-import ua.com.alevel.entities.WarehouseWriteOff;
-import ua.com.alevel.entities.WarehouseWriteOff_;
+import ua.com.alevel.dto.PageDataRequest;
+import ua.com.alevel.entities.Order;
+import ua.com.alevel.entities.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +66,99 @@ public class WarehouseWriteOffDao implements DaoWarehouseWriteOff {
                 .createQuery("select wo from WarehouseWriteOff wo")
                 .getResultList();
         return writeOffList;
+    }
+
+    public List<WarehouseWriteOff> findAllFromRequest(PageDataRequest request) {
+        int limitAmount = request.getNumberOfElementsOnPage();
+        int limitFrom = (request.getPageNumber() - 1) * limitAmount;
+        String sortBy = request.getSortBy();
+        Boolean isSortAsc = request.getIsSortAsc();
+        String search = "%" + request.getSearchString() + "%";
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<WarehouseWriteOff> writeOffCriteria = cb.createQuery(WarehouseWriteOff.class);
+        Root<WarehouseWriteOff> writeOffRoot = writeOffCriteria.from(WarehouseWriteOff.class);
+
+        Join<WarehouseWriteOff, Client> clientJoin = writeOffRoot.join(WarehouseWriteOff_.client, JoinType.LEFT);
+        Join<WarehouseWriteOff, Employee> employeeJoin = writeOffRoot.join(WarehouseWriteOff_.employee, JoinType.LEFT);
+        Join<WarehouseWriteOff, Order> orderJoin = writeOffRoot.join(WarehouseWriteOff_.order, JoinType.LEFT);
+        Join<WarehouseWriteOff, Payment> paymentJoin = writeOffRoot.join(WarehouseWriteOff_.payment, JoinType.LEFT);
+
+        Predicate searchPredicate = createSearchPredicate(search, cb, writeOffRoot, clientJoin, employeeJoin, orderJoin, paymentJoin);
+        javax.persistence.criteria.Order order = cb.asc(writeOffRoot.get("id"));
+
+        if (sortBy.equals(WarehouseWriteOff_.ID)
+                || sortBy.equals(WarehouseWriteOff_.DATE_TIME) || sortBy.equals(WarehouseWriteOff_.DESCRIPTION)
+                || sortBy.equals(WarehouseWriteOff_.PAYMENT)) {
+            if (isSortAsc) {
+                order = cb.asc(writeOffRoot.get(sortBy));
+            } else {
+                order = cb.desc(writeOffRoot.get(sortBy));
+            }
+        } else if (sortBy.equals(WarehouseWriteOff_.CLIENT)) {
+            if (isSortAsc) {
+                order = cb.asc(clientJoin.get(Client_.name));
+            } else {
+                order = cb.desc(clientJoin.get(Client_.name));
+            }
+        } else if (sortBy.equals(WarehouseWriteOff_.ORDER)) {
+            if (isSortAsc) {
+                order = cb.asc(orderJoin.get(Order_.id));
+            } else {
+                order = cb.desc(orderJoin.get(Order_.id));
+            }
+        }
+
+        writeOffCriteria
+                .select(writeOffRoot)
+                .where(searchPredicate)
+                .orderBy(order);
+
+        List<WarehouseWriteOff> resultList = entityManager.createQuery(writeOffCriteria)
+                .setFirstResult(limitFrom)
+                .setMaxResults(limitAmount)
+                .getResultList();
+
+        return resultList;
+    }
+
+    public Long countNumberOfSearchMatches(PageDataRequest request) {
+        String search = "%" + request.getSearchString() + "%";
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> longCriteria = cb.createQuery(Long.class);
+        Root<WarehouseWriteOff> writeOffRoot = longCriteria.from(WarehouseWriteOff.class);
+
+        Join<WarehouseWriteOff, Client> clientJoin = writeOffRoot.join(WarehouseWriteOff_.client, JoinType.LEFT);
+        Join<WarehouseWriteOff, Employee> employeeJoin = writeOffRoot.join(WarehouseWriteOff_.employee);
+        Join<WarehouseWriteOff, Order> orderJoin = writeOffRoot.join(WarehouseWriteOff_.order, JoinType.LEFT);
+        Join<WarehouseWriteOff, Payment> paymentJoin = writeOffRoot.join(WarehouseWriteOff_.payment, JoinType.LEFT);
+
+        Predicate searchPredicate = createSearchPredicate(search, cb, writeOffRoot, clientJoin, employeeJoin, orderJoin, paymentJoin);
+
+        longCriteria
+                .select(cb.count(writeOffRoot))
+                .where(searchPredicate);
+
+        Long count = entityManager.createQuery(longCriteria)
+                .getSingleResult();
+
+        return count;
+    }
+
+    private Predicate createSearchPredicate(String search, CriteriaBuilder cb, Root<WarehouseWriteOff> writeOffRoot,
+                                            Join<WarehouseWriteOff, Client> clientJoin, Join<WarehouseWriteOff, Employee> employeeJoin,
+                                            Join<WarehouseWriteOff, Order> orderJoin, Join<WarehouseWriteOff, Payment> paymentJoin
+    ) {
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.like(writeOffRoot.get(WarehouseWriteOff_.id).as(String.class), search));
+        predicates.add(cb.like(clientJoin.get(Client_.name).as(String.class), search));
+        predicates.add(cb.like(employeeJoin.get(Employee_.name).as(String.class), search));
+        predicates.add(cb.like(writeOffRoot.get(WarehouseWriteOff_.dateTime).as(String.class), search));
+        predicates.add(cb.like(writeOffRoot.get(WarehouseWriteOff_.description).as(String.class), search));
+        predicates.add(cb.like(orderJoin.get(Order_.id).as(String.class), search));
+        predicates.add(cb.like(paymentJoin.get(Payment_.amount).as(String.class), search));
+        return cb.or(predicates.toArray(Predicate[]::new));
     }
 
     @Override

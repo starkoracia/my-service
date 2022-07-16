@@ -66,16 +66,16 @@ function WriteOffTable({showMessage, showAddWriteOff, setShowAddWriteOff}) {
     }
 
     function getElements() {
-        axios.get('/write_offs')
-            //     numberOfElementsOnPage: numberOfRows,
-            //     pageNumber: pageNumber,
-            //     searchString: searchField,
-            //     isSortAsc: sort.isAsc,
-            //     sortBy: sort.sortField
-            // })
+        axios.post('/write_offs', {
+                numberOfElementsOnPage: numberOfRows,
+                pageNumber: pageNumber,
+                searchString: searchField,
+                isSortAsc: sort.isAsc,
+                sortBy: sort.sortField
+            })
             .then((response) => {
-                setWriteOffs(response.data);
-                // setAmountOfElements(response.data.amountOfElements);
+                setWriteOffs(response.data.dtoEntities);
+                setAmountOfElements(response.data.amountOfElements);
             })
             .catch(function (error) {
                 console.log(error);
@@ -83,7 +83,7 @@ function WriteOffTable({showMessage, showAddWriteOff, setShowAddWriteOff}) {
     }
 
     function editWriteOff(writeOff) {
-        axios.post('/writeOffs/edit', writeOff)
+        axios.post('/write_offs/edit', writeOff)
             .then((response) => {
                 if (response.data === true) {
                     showMessage('Успешно сохранен', 'success')
@@ -99,7 +99,7 @@ function WriteOffTable({showMessage, showAddWriteOff, setShowAddWriteOff}) {
     }
 
     const getNumberOfSearchMatches = () => {
-        axios.post('/writeOffs/matches', {
+        axios.post('/write_offs/matches', {
             searchString: searchField
         })
             .then((response) => {
@@ -230,7 +230,7 @@ function WriteOffTable({showMessage, showAddWriteOff, setShowAddWriteOff}) {
             {headerName: 'Ответственный/Время', fieldName: 'dateTime'},
             {headerName: 'Описание', fieldName: 'description'},
             {headerName: 'Заказ', fieldName: 'order'},
-            {headerName: 'Цена', fieldName: 'payment'},
+            {headerName: 'Сумма', fieldName: 'payment'},
         ]
         const headerFieldMap = new Map();
         headerFieldArray.forEach(headerField => {

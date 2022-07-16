@@ -57,12 +57,12 @@ public class WarehousePostingFacade implements FacadeWarehousePosting {
 
     @Override
     public PageDataResponse<WarehousePostingDto> findAllFromRequest(PageDataRequest request) {
-        return null;
+        return postingService.findAllFromRequest(request);
     }
 
     @Override
     public Long countNumberOfSearchMatches(PageDataRequest request) {
-        return null;
+        return postingService.countNumberOfSearchMatches(request);
     }
 
     @Override
