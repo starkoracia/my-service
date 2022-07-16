@@ -10,11 +10,11 @@ class Navbar extends Component {
                 <Link className={'brand'} to={"/"}>
                     <img className={'brand-svg-img'} src={'/images/service.svg'}/>
                 </Link>
-                <NavLink className={'nav-link nav-bar'} to={"/"}
-                         activeClassName={'nav-link-selected'}>
-                    <img className={'navbar-svg-img'} src={'/images/orders.svg'}/>
-                    <span className={'navbar-text'}>Заказы</span>
-                </NavLink>
+                {/*<NavLink className={'nav-link nav-bar'} to={"/"}*/}
+                {/*         activeClassName={'nav-link-selected'}>*/}
+                {/*    <img className={'navbar-svg-img'} src={'/images/orders.svg'}/>*/}
+                {/*    <span className={'navbar-text'}>Заказы</span>*/}
+                {/*</NavLink>*/}
                 <NavLink className={'nav-link nav-bar'} to={"/clients"}
                          activeClassName={'nav-link-selected'}>
                     <img className={'navbar-svg-img'} src={'/images/clients.svg'}/>
