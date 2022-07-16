@@ -1,5 +1,7 @@
 package ua.com.alevel.services.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.ClientDao;
 import ua.com.alevel.dto.PageDataRequest;
@@ -15,6 +17,8 @@ import java.util.Optional;
 public class ClientService implements ServiceClient {
 
     ClientDao clientDao;
+    private Logger infoLogger = LoggerFactory.getLogger("info");
+    private Logger errorLogger = LoggerFactory.getLogger("error");
 
     public ClientService(ClientDao clientDao) {
         this.clientDao = clientDao;
@@ -22,7 +26,9 @@ public class ClientService implements ServiceClient {
 
     @Override
     public Boolean create(Client client) {
-        return clientDao.create(client);
+        Boolean isCreated = clientDao.create(client);
+        infoLogger.info("Create client: {}", client);
+        return isCreated;
     }
 
     @Override
