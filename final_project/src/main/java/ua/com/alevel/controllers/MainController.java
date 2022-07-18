@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ua.com.alevel.dto.entities.EmployeeDto;
-import ua.com.alevel.facade.impl.*;
+import ua.com.alevel.facade.impl.EmployeeFacade;
+import ua.com.alevel.services.impl.AuthRoleService;
+import ua.com.alevel.services.impl.AuthUserService;
 
 import java.util.List;
 
@@ -15,30 +17,19 @@ import java.util.List;
 public class MainController {
 
     EmployeeFacade employeeFacade;
-    WarehousePostingFacade postingFacade;
-    WarehouseWriteOffFacade writeOffFacade;
-    ProductMaterialFacade productMaterialFacade;
-    RelocatableProductFacade relocatableProductFacade;
-    PaymentFacade paymentFacade;
 
-    public MainController(EmployeeFacade employeeFacade, WarehousePostingFacade postingFacade, WarehouseWriteOffFacade writeOffFacade, ProductMaterialFacade productMaterialFacade, RelocatableProductFacade relocatableProductFacade, PaymentFacade paymentFacade) {
+    public MainController(EmployeeFacade employeeFacade, AuthRoleService roleService, AuthUserService userService) {
         this.employeeFacade = employeeFacade;
-        this.postingFacade = postingFacade;
-        this.writeOffFacade = writeOffFacade;
-        this.productMaterialFacade = productMaterialFacade;
-        this.relocatableProductFacade = relocatableProductFacade;
-        this.paymentFacade = paymentFacade;
     }
 
-    @GetMapping("/relocatable")
-    public String relocatableProductsTest() {
-        return "www";
+    @GetMapping("/test")
+    public String test() {
+        return "test";
     }
 
     @GetMapping("/employees")
     public List<EmployeeDto> employees() {
         return employeeFacade.findAll();
     }
-
 
 }

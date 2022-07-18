@@ -4,6 +4,34 @@ create schema if not exists final_project;
 
 use final_project;
 
+CREATE TABLE auth_role
+(
+    id   BIGINT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(255) UNIQUE NOT NULL,
+    CONSTRAINT pk_auth_role PRIMARY KEY (id)
+);
+
+CREATE TABLE auth_users
+(
+    email    VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NULL,
+    password VARCHAR(255) NULL,
+    CONSTRAINT pk_auth_users PRIMARY KEY (email)
+);
+
+CREATE TABLE auth_users_auth_roles
+(
+    auth_roles_id BIGINT       NOT NULL,
+    auth_user_id  VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_auth_users_auth_roles PRIMARY KEY (auth_roles_id, auth_user_id)
+);
+
+ALTER TABLE auth_users_auth_roles
+    ADD CONSTRAINT fk_autuseautrol_on_auth_role FOREIGN KEY (auth_roles_id) REFERENCES auth_role (id);
+
+ALTER TABLE auth_users_auth_roles
+    ADD CONSTRAINT fk_autuseautrol_on_auth_user FOREIGN KEY (auth_user_id) REFERENCES auth_users (email);
+
 CREATE TABLE product_categories
 (
     id   BIGINT AUTO_INCREMENT NOT NULL,
