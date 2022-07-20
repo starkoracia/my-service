@@ -5,6 +5,9 @@ import ShowMessage from "./ShowMessage";
 import Navbar from "./Navbar";
 import PaymentTable from "./PaymentTable";
 import WarehouseWindow from "./WarehouseWindow";
+import Register from "./auth/Register";
+import Login from "./auth/Login";
+import RequireAuth from "./auth/RequireAuth";
 
 
 export default class Root extends Component {
@@ -44,12 +47,15 @@ export default class Root extends Component {
                 <Routes>
                     <Route exact path="/" element={<Navigate replace to={"/clients"}/>}/>
                     <Route path="/clients/*" element={<ClientTable showMessage={showMessage}/>}/>
-                    <Route path="/payments/*" element={<PaymentTable showMessage={showMessage}/>}/>
-                    <Route path="/warehouse/*" element={<WarehouseWindow showMessage={showMessage}/>}/>
-                </Routes>
-                {/*<Scrollbars style={{width: "100%", height: "100%"}}>*/}
 
-                {/*</Scrollbars>*/}
+                    <Route element={<RequireAuth/>}>
+                        <Route path="/payments/*" element={<PaymentTable showMessage={showMessage}/>}/>
+                        <Route path="/warehouse/*" element={<WarehouseWindow showMessage={showMessage}/>}/>
+                    </Route>
+
+                    <Route path="/login" element={<Login/>}></Route>
+                    <Route path="/register" element={<Register/>}></Route>
+                </Routes>
             </BrowserRouter>
         );
     }
