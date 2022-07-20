@@ -26,4 +26,5 @@ public class AuthenticationEntryPointConfig extends BasicAuthenticationEntryPoin
         super.afterPropertiesSet();
     }
 
+
 }
