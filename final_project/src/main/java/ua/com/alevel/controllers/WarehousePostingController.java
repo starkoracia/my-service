@@ -1,6 +1,8 @@
 package ua.com.alevel.controllers;
 
 import org.springframework.web.bind.annotation.*;
+import ua.com.alevel.dto.PageDataRequest;
+import ua.com.alevel.dto.PageDataResponse;
 import ua.com.alevel.dto.entities.RelocatableProductDto;
 import ua.com.alevel.dto.entities.WarehousePostingDto;
 import ua.com.alevel.facade.impl.PaymentFacade;
@@ -26,6 +28,11 @@ public class WarehousePostingController {
         return postingFacade.findAll();
     }
 
+    @PostMapping
+    public PageDataResponse<WarehousePostingDto> writeOffsFromRequest(@RequestBody PageDataRequest dataRequest) {
+        return postingFacade.findAllFromRequest(dataRequest);
+    }
+
     @PostMapping("/create")
     public Boolean postingCreate(@RequestBody WarehousePostingDto postingDto) {
         paymentFacade.create(postingDto.getPayment());
@@ -41,6 +48,11 @@ public class WarehousePostingController {
     @PostMapping("/relocatable_products")
     public List<RelocatableProductDto> getRelocatableProductsFromPosting(@RequestBody WarehousePostingDto postingDto) {
         return postingFacade.getRelocatableProductsFromPosting(postingDto);
+    }
+
+    @PostMapping("/matches")
+    public Long searchMatches(@RequestBody PageDataRequest request) {
+        return postingFacade.countNumberOfSearchMatches(request);
     }
 
 }

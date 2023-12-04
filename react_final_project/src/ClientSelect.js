@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Select from "react-select";
 import {Button} from "react-bootstrap";
 import AddClientWindow from "./AddClientWindow";
-import axios from "./api/axios";
+import {axiosFreeAuth} from "./api/axios";
 
 function ClientSelect({
                           show, clientSelectValue, setClientSelectValue, showMessage,
@@ -31,7 +31,7 @@ function ClientSelect({
     }
 
     function getLastCreatedClient() {
-        axios.get('/clients/last')
+        axiosFreeAuth.get('/clients/last')
             .then((response) => {
                 const client = response.data;
                 const label = `${client.name}  ${client.mobile}`
@@ -54,7 +54,7 @@ function ClientSelect({
     }
 
     function getClients() {
-        axios.get('/clients')
+        axiosFreeAuth.get('/clients')
             .then((response) => {
                 createAndSetClientOptions(response.data);
             })

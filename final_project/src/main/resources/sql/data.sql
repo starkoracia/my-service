@@ -1,3 +1,15 @@
+INSERT INTO auth_role (name)
+VALUES ('admin');
+
+INSERT INTO final_project.auth_role (name)
+VALUES ('user');
+
+INSERT INTO final_project.auth_users (email, username, password)
+VALUES ('starkoracia@gmail.com', 'starkoracia', '$2a$12$I2eG3SD4NLlV.KldLbW8KujaC7HWy8tYiCmXJsSLMyIN8dgAvjdta');
+
+INSERT INTO final_project.auth_users_auth_roles (auth_roles_id, auth_user_id)
+VALUES (1, 'starkoracia@gmail.com');
+
 INSERT INTO clients
     (name, email, mobile, is_supplier, recommendation, annotation)
 VALUES ('Геральд Ривийский', 'witcher@gmail.com', '380980001112', false, 'Рекомендация', 'Заметка');

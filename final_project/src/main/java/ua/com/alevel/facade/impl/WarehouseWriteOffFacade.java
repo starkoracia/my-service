@@ -58,12 +58,12 @@ public class WarehouseWriteOffFacade implements FacadeWarehouseWriteOff {
 
     @Override
     public PageDataResponse<WarehouseWriteOffDto> findAllFromRequest(PageDataRequest request) {
-        return null;
+        return writeOffService.findAllFromRequest(request);
     }
 
     @Override
     public Long countNumberOfSearchMatches(PageDataRequest request) {
-        return null;
+        return writeOffService.countNumberOfSearchMatches(request);
     }
 
     @Override

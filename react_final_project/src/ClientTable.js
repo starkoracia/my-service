@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Table from "./Table";
-import axios from "./api/axios";
+import {axiosFreeAuth} from "./api/axios";
 import {useNavigate} from 'react-router-dom';
 import AddClientWindow from './AddClientWindow';
 import EditClientWindow from "./EditClientWindow";
@@ -51,7 +51,7 @@ function ClientTable({showMessage}) {
     }, [searchField])
 
     const getElements = () => {
-        axios.post('/clients', {
+        axiosFreeAuth.post('/clients', {
             numberOfElementsOnPage: numberOfRows,
             pageNumber: pageNumber,
             searchString: searchField,
@@ -68,7 +68,7 @@ function ClientTable({showMessage}) {
     }
 
     function editClient(client) {
-        axios.post('/clients/edit', client)
+        axiosFreeAuth.post('/clients/edit', client)
             .then((response) => {
                 if (response.data === true) {
                     showMessage('Успешно сохранен', 'success')
@@ -84,7 +84,7 @@ function ClientTable({showMessage}) {
     }
 
     const getNumberOfSearchMatches = () => {
-        axios.post('/clients/matches', {
+        axiosFreeAuth.post('/clients/matches', {
             searchString: searchField
         })
             .then((response) => {

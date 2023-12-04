@@ -4,8 +4,9 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-new.bat
 
+new.bat
+!**/logs/
 ### STS ###
 .apt_generated
 .classpath
@@ -20,6 +21,7 @@ new.bat
 *.iws
 *.iml
 *.ipr
+*.log
 
 ### NetBeans ###
 /nbproject/private/

@@ -6,7 +6,10 @@ import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.ProductMaterialDao;
 import ua.com.alevel.dao.impl.RelocatableProductDao;
 import ua.com.alevel.dao.impl.WarehousePostingDao;
+import ua.com.alevel.dto.PageDataRequest;
+import ua.com.alevel.dto.PageDataResponse;
 import ua.com.alevel.dto.entities.RelocatableProductDto;
+import ua.com.alevel.dto.entities.WarehousePostingDto;
 import ua.com.alevel.entities.ProductMaterial;
 import ua.com.alevel.entities.RelocatableProduct;
 import ua.com.alevel.entities.WarehousePosting;
@@ -78,6 +81,22 @@ public class WarehousePostingService implements ServiceWarehousePosting {
     @Override
     public List<WarehousePosting> findAll() {
         return postingDao.findAll();
+    }
+
+    public PageDataResponse<WarehousePostingDto> findAllFromRequest(PageDataRequest request) {
+        List<WarehousePosting> postings = postingDao.findAllFromRequest(request);
+        PageDataResponse<WarehousePostingDto> dataResponse = new PageDataResponse<>();
+        dataResponse.setDtoEntities(WarehousePostingDto.toDtoList(postings));
+        if (request.getSearchString().equals("")) {
+            dataResponse.setAmountOfElements(count().intValue());
+        } else {
+            dataResponse.setAmountOfElements(countNumberOfSearchMatches(request).intValue());
+        }
+        return dataResponse;
+    }
+
+    public Long countNumberOfSearchMatches(PageDataRequest request) {
+        return postingDao.countNumberOfSearchMatches(request);
     }
 
     @Override

@@ -66,16 +66,16 @@ function PostingTable({showMessage, showAddPosting, setShowAddPosting}) {
     }
 
     function getElements() {
-        axios.get('/postings')
-            //     numberOfElementsOnPage: numberOfRows,
-            //     pageNumber: pageNumber,
-            //     searchString: searchField,
-            //     isSortAsc: sort.isAsc,
-            //     sortBy: sort.sortField
-            // })
+        axios.post('/postings', {
+                numberOfElementsOnPage: numberOfRows,
+                pageNumber: pageNumber,
+                searchString: searchField,
+                isSortAsc: sort.isAsc,
+                sortBy: sort.sortField
+            })
             .then((response) => {
-                setPostings(response.data);
-                // setAmountOfElements(response.data.amountOfElements);
+                setPostings(response.data.dtoEntities);
+                setAmountOfElements(response.data.amountOfElements);
             })
             .catch(function (error) {
                 console.log(error);

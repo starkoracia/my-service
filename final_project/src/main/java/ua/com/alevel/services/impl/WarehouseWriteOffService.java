@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import ua.com.alevel.dao.impl.ProductMaterialDao;
 import ua.com.alevel.dao.impl.RelocatableProductDao;
 import ua.com.alevel.dao.impl.WarehouseWriteOffDao;
+import ua.com.alevel.dto.PageDataRequest;
+import ua.com.alevel.dto.PageDataResponse;
+import ua.com.alevel.dto.entities.WarehouseWriteOffDto;
 import ua.com.alevel.entities.ProductMaterial;
 import ua.com.alevel.entities.RelocatableProduct;
 import ua.com.alevel.entities.WarehouseWriteOff;
@@ -77,6 +80,22 @@ public class WarehouseWriteOffService implements ServiceWarehouseWriteOff {
     @Override
     public List<WarehouseWriteOff> findAll() {
         return writeOffDao.findAll();
+    }
+
+    public PageDataResponse<WarehouseWriteOffDto> findAllFromRequest(PageDataRequest request) {
+        List<WarehouseWriteOff> writeOffs = writeOffDao.findAllFromRequest(request);
+        PageDataResponse<WarehouseWriteOffDto> dataResponse = new PageDataResponse<>();
+        dataResponse.setDtoEntities(WarehouseWriteOffDto.toDtoList(writeOffs));
+        if (request.getSearchString().equals("")) {
+            dataResponse.setAmountOfElements(count().intValue());
+        } else {
+            dataResponse.setAmountOfElements(countNumberOfSearchMatches(request).intValue());
+        }
+        return dataResponse;
+    }
+
+    public Long countNumberOfSearchMatches(PageDataRequest request) {
+        return writeOffDao.countNumberOfSearchMatches(request);
     }
 
     @Override
